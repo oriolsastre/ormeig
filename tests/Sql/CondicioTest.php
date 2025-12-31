@@ -38,6 +38,7 @@ class CondicioTest extends TestCase
         $this->expectException(ColumnaNoExisteix::class);
         new Condicio(TestModelPk::columnaInexistent(), Comparacio::EQ, '2');
     }
+
     # region Comparatius
     #[Test]
     #[DataProvider('comparatiuProvider')]
@@ -53,6 +54,7 @@ class CondicioTest extends TestCase
         $this->assertInstanceOf(Condicio::class, $condicio);
         $this->assertEquals("test.testFloat {$comparacio->value} 5.5", $condicio->toSql());
     }
+
     #[Test]
     #[DataProvider('comparatiuProvider')]
     public function testOperadorsComparatiusFallaColumna(Comparacio $comparacio): void
@@ -60,6 +62,7 @@ class CondicioTest extends TestCase
         $this->expectException(CondicioTipusColumna::class);
         new Condicio(TestModelPk::testNom(), $comparacio, 5);
     }
+
     #[Test]
     #[DataProvider('comparatiuProvider')]
     public function testOperadorsComparatiusFallaValor(Comparacio $comparacio): void
@@ -67,6 +70,7 @@ class CondicioTest extends TestCase
         $this->expectException(CondicioTipusColumna::class);
         new Condicio(TestModelPk::testId(), $comparacio, '5');
     }
+
     # endregion
     # region LIKE
     #[Test]
@@ -76,12 +80,14 @@ class CondicioTest extends TestCase
         $this->assertInstanceOf(Condicio::class, $condicio);
         $this->assertEquals("test.test_nom LIKE '%Value%'", $condicio->toSql());
     }
+
     #[Test]
     public function testOperadorLikeFallaColumna(): void
     {
         $this->expectException(CondicioTipusColumna::class);
         new Condicio(TestModelPk::testId(), Comparacio::LIKE, '5');
     }
+
     #[Test]
     public function testOperadorLikeFallaValor(): void
     {
@@ -93,10 +99,10 @@ class CondicioTest extends TestCase
     public static function comparatiuProvider(): array
     {
         return [
-            "Més petit que <" => [Comparacio::LT],
-            "Més petit o igual que <=" => [Comparacio::LTE],
-            "Més gran que >" => [Comparacio::GT],
-            "Més gran o igual que >=" => [Comparacio::GTE],
+            'Més petit que <' => [Comparacio::LT],
+            'Més petit o igual que <=' => [Comparacio::LTE],
+            'Més gran que >' => [Comparacio::GT],
+            'Més gran o igual que >=' => [Comparacio::GTE],
         ];
     }
 }

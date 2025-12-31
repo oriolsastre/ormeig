@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Sastreo\Ormeig\Tests\Atributs;
 
 use Attribute;
-use Exception;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -22,7 +21,7 @@ class FkTest extends TestCase
         $columna = new Fk(TestModelPk::class, 'testId');
         $this->assertInstanceOf(Fk::class, $columna);
 
-        $this->expectException(Exception::class);
+        $this->expectException(\Exception::class);
         new Fk(TestCase::class, 'someColumn');
     }
 
@@ -30,10 +29,10 @@ class FkTest extends TestCase
     public function isAttribute(): void
     {
         $fk = new Fk(TestModelPk::class, 'test_nom');
-        $reflectFk = new ReflectionClass($fk);
+        $reflectFk = new \ReflectionClass($fk);
         $attr = $reflectFk->getAttributes();
         $this->assertCount(1, $attr);
-        $this->assertInstanceOf(Attribute::class, $attr[0]->newInstance());
+        $this->assertInstanceOf(\Attribute::class, $attr[0]->newInstance());
 
         // $testModel = new TestModelPk();
         // $reflectTestModel = new ReflectionClass($testModel);

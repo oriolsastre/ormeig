@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Sastreo\Ormeig\Tests;
 
-use PDO;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
@@ -31,8 +30,9 @@ class OrmeigTest extends TestCase
         );
         $this->assertInstanceOf(Ormeig::class, $ormeig);
         $dbcnx = $ormeig->getDbcnx();
-        $this->assertInstanceOf(PDO::class, $dbcnx);
+        $this->assertInstanceOf(\PDO::class, $dbcnx);
     }
+
     #[Test]
     public function testBadConstructor(): void
     {
@@ -42,6 +42,7 @@ class OrmeigTest extends TestCase
             dbname: 'test',
         );
     }
+
     #[Test]
     public function testGetGestor(): void
     {
@@ -49,7 +50,6 @@ class OrmeigTest extends TestCase
             driver: Driver::SQLITE,
             dbname: ':memory:',
         );
-
 
         $gestor = $ormeig->getGestor(TestModelPk::class);
         $this->assertInstanceOf(Gestor::class, $gestor);

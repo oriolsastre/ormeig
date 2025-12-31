@@ -11,19 +11,21 @@ use Sastreo\Ormeig\Interfaces\ClausulaSql;
 class Ordenacio implements ClausulaSql
 {
     /**
-     * @param Columna $columna
+     * @param Columna        $columna
      * @param EnumsOrdenacio $ordre
      */
     public function __construct(
         public Columna $columna,
-        public EnumsOrdenacio $ordre
-    ) {}
+        public EnumsOrdenacio $ordre,
+    ) {
+    }
 
     public function toSql(): string
     {
         $model = $this->columna->taulaSql;
         $columna = $this->columna->columnaSql;
         $ordre = $this->ordre->value;
+
         return "$model.$columna $ordre";
     }
 }

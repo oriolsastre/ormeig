@@ -4,4 +4,6 @@ declare(strict_types=1);
 
 namespace Sastreo\Ormeig\Interfaces;
 
-interface Model {}
+interface Model
+{
+}

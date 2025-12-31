@@ -49,11 +49,12 @@ class ConsultaTest extends TestCase
     #[Test]
     public function testGetSqlSimple(): void
     {
-        $consulta = $this->getConsulta("Test");
+        $consulta = $this->getConsulta('Test');
         $sql = $consulta->getSql();
         $this->assertIsString($sql);
-        $this->assertStringStartsWith("SELECT * FROM test", $sql);
+        $this->assertStringStartsWith('SELECT * FROM test', $sql);
     }
+
     #[Test]
     public function testGetSqlLimit(): void
     {
@@ -61,22 +62,23 @@ class ConsultaTest extends TestCase
         $consulta = $this->getConsulta();
         $sql = $consulta->getSql();
         $this->assertIsString($sql);
-        $this->assertEquals("SELECT * FROM test LIMIT 100;", $sql);
+        $this->assertEquals('SELECT * FROM test LIMIT 100;', $sql);
 
         // Sense Limit
         $consulta = $this->getConsulta();
         $consulta->limit(0);
         $sql = $consulta->getSql();
         $this->assertIsString($sql);
-        $this->assertEquals("SELECT * FROM test;", $sql);
+        $this->assertEquals('SELECT * FROM test;', $sql);
 
         // Limit
         $consulta = $this->getConsulta();
         $consulta->limit(10);
         $sql = $consulta->getSql();
         $this->assertIsString($sql);
-        $this->assertEquals("SELECT * FROM test LIMIT 10;", $sql);
+        $this->assertEquals('SELECT * FROM test LIMIT 10;', $sql);
     }
+
     #[Test]
     public function testGetSqlOrderBy(): void
     {
@@ -84,24 +86,27 @@ class ConsultaTest extends TestCase
         $consulta->ordena(new Ordenacio(TestModelPk::testId(), OrdenacioEnum::ASC))->limit(0);
         $sql = $consulta->getSql();
         $this->assertIsString($sql);
-        $this->assertEquals("SELECT * FROM test ORDER BY test.testId ASC;", $sql);
+        $this->assertEquals('SELECT * FROM test ORDER BY test.testId ASC;', $sql);
 
         // Multiples ordres
         $consulta = $this->getConsulta(TestModelPk::class);
         $consulta->ordena(new Ordenacio(TestModelPk::testId(), OrdenacioEnum::ASC))->ordena(new Ordenacio(TestModelPk::testNom(), OrdenacioEnum::DESC))->limit(0);
         $sql = $consulta->getSql();
         $this->assertIsString($sql);
-        $this->assertEquals("SELECT * FROM test ORDER BY test.testId ASC, test.test_nom DESC;", $sql);
+        $this->assertEquals('SELECT * FROM test ORDER BY test.testId ASC, test.test_nom DESC;', $sql);
     }
+
     #endregion SQL
     /**
      * @param class-string<ModelInterface> $model
+     *
      * @return Consulta
      */
     private function getConsulta(string $model = TestModelPk::class): Consulta
     {
         $mockFabrica = new MockFabrica($model);
         $gestor = $mockFabrica->mockGestor();
+
         return new Consulta($gestor->getModel());
     }
 }

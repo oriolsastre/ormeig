@@ -8,8 +8,6 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
-use ReflectionClass;
-use ReflectionProperty;
 use Sastreo\Ormeig\Atributs\Columna as AtributsColumna;
 use Sastreo\Ormeig\Atributs\Taula;
 use Sastreo\Ormeig\Columna;
@@ -59,10 +57,10 @@ class ColumnaTest extends TestCase
 
     public function testErrorPropietatNoDefinidaComColumna(): void
     {
-        $reflectModel = new ReflectionClass(TestModelPk::class);
+        $reflectModel = new \ReflectionClass(TestModelPk::class);
         // Confirmem que la propietat noColumna existeix
         $reflectProperty = $reflectModel->getProperty('noColumna');
-        $this->assertInstanceOf(ReflectionProperty::class, $reflectProperty);
+        $this->assertInstanceOf(\ReflectionProperty::class, $reflectProperty);
 
         // L'error al intentar crear-ne una columna
         $this->expectException(ColumnaNoExisteix::class);

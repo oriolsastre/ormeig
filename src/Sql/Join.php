@@ -11,13 +11,14 @@ use Sastreo\Ormeig\Interfaces\ClausulaSql;
 class Join implements ClausulaSql
 {
     /**
-     * @param \Sastreo\Ormeig\Columna $columnaOrigen
-     * @param \Sastreo\Ormeig\Columna $columnaDesti
-     * @param \Sastreo\Ormeig\Enums\Join $join
+     * @param Columna   $columnaOrigen
+     * @param Columna   $columnaDesti
+     * @param EnumsJoin $join
      */
     public function __construct(
         public Columna $columnaOrigen,
         public Columna $columnaDesti,
         public EnumsJoin $join = EnumsJoin::INNER,
-    ) {}
+    ) {
+    }
 }

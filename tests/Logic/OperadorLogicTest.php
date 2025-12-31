@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Sastreo\Ormeig\Tests\Logic;
 
-use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
@@ -18,7 +17,6 @@ use Sastreo\Ormeig\Logic\LogicO;
 use Sastreo\Ormeig\Logic\OperadorLogic;
 use Sastreo\Ormeig\Model;
 use Sastreo\Ormeig\Sql\Condicio;
-
 use Sastreo\Ormeig\Tests\Models\TestModelPk;
 
 #[CoversClass(OperadorLogic::class)]
@@ -61,8 +59,8 @@ class OperadorLogicTest extends TestCase
     #[Test]
     public function condicioFailTest(): void
     {
-        $this->expectException(InvalidArgumentException::class);
-        /** @suppress PHP0406 */
-        new LogicO("testId", Comparacio::EQ, 2);
+        $this->expectException(\InvalidArgumentException::class);
+        /* @suppress PHP0406 */
+        new LogicO('testId', Comparacio::EQ, 2);
     }
 }

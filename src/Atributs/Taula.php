@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace Sastreo\Ormeig\Atributs;
 
-use Attribute;
-
-#[Attribute(Attribute::TARGET_CLASS)]
+#[\Attribute(\Attribute::TARGET_CLASS)]
 final class Taula
 {
     public function __construct(
-        public readonly string|null $nom = null
-    ) {}
+        public readonly ?string $nom = null,
+    ) {
+    }
 }

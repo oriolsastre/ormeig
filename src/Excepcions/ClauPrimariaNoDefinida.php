@@ -5,15 +5,13 @@ declare(strict_types=1);
 namespace Sastreo\Ormeig\Excepcions;
 
 use Sastreo\Ormeig\Interfaces\Model;
-use Throwable;
-use ValueError;
 
-class ClauPrimariaNoDefinida extends ValueError
+class ClauPrimariaNoDefinida extends \ValueError
 {
     /**
      * @param class-string<Model> $model
      */
-    public function __construct(string $model, int $code = 0, Throwable|null $previous = null)
+    public function __construct(string $model, int $code = 0, ?\Throwable $previous = null)
     {
         parent::__construct("El model $model no té clau primària definida.", $code, $previous);
     }

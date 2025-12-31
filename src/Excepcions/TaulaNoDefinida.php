@@ -5,9 +5,8 @@ declare(strict_types=1);
 namespace Sastreo\Ormeig\Excepcions;
 
 use Sastreo\Ormeig\Interfaces\Model;
-use TypeError;
 
-class TaulaNoDefinida extends TypeError
+class TaulaNoDefinida extends \TypeError
 {
     /**
      * @param class-string<Model> $model
