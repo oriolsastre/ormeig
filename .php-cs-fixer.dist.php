@@ -10,9 +10,14 @@ return (new Config())
     ->setParallelConfig(ParallelConfigFactory::detect()) // @TODO 4.0 no need to call this manually
     ->setRiskyAllowed(true)
     ->setRules([
-        '@auto' => true,
-        '@auto:risky' => true,
-        'native_function_invocation' => true,
+        '@PSR12' => true,
+        '@Symfony' => true,
+        '@Symfony:risky' => true,
+        'no_superfluous_phpdoc_tags' => false,
+        'array_push' => false,
+        'yoda_style' => false,
+        'single_line_comment_style' => false, // per les #region #endregion
+        'single_line_comment_spacing' => false, // per les #region #endregion
     ])
     // 💡 by default, Fixer looks for `*.php` files excluding `./vendor/` - here, you can groom this config
     ->setFinder(
