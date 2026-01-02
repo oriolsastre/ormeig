@@ -4,7 +4,10 @@
 
 Entre un ORM (*Object Relational Mapping*) i una DBAL (*Database Abstraction Layer*) simple per a projectes petits que tinc que no requereixen de grans funcionalitats. M'he inspirat sobretot amb [Doctrine](https://www.doctrine-project.org/).
 
-Funciona amb [Sqlite](https://sqlite.org/) i... mysql?
+Funcionaria amb [Sqlite](https://sqlite.org/) i... mysql?
+
+> [!CAUTION]
+> Encara no funciona, està en desenvolupament.
 
 ## Instal·lació
 
