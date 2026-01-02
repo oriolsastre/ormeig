@@ -12,4 +12,25 @@ abstract class Model implements ModelInterface
     {
         return new Columna(static::class, $method);
     }
+
+    /**
+     * @return array<string, string>
+     */
+    public static function getMappedColumns(): array
+    {
+        $mappedColumns = [];
+        $reflectionModel = new \ReflectionClass(static::class);
+        $reflectionProperties = $reflectionModel->getProperties();
+        foreach ($reflectionProperties as $property) {
+            $attrsColumna = $property->getAttributes(Columna::class);
+            if (\count($attrsColumna) === 1) {
+                /** @var string $columnName */
+                $columnName = $attrsColumna[0]->newInstance()->nom ?? $property->getName();
+                $modelName = $property->getName();
+                $mappedColumns[$columnName] = $modelName;
+            }
+        }
+
+        return $mappedColumns;
+    }
 }

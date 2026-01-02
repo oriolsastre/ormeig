@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Sastreo\Ormeig\Tests\Mocks;
 
 use PHPUnit\Framework\TestCase;
+use Sastreo\Ormeig\Enums\Driver;
 use Sastreo\Ormeig\Gestor;
 use Sastreo\Ormeig\Interfaces\Model;
 use Sastreo\Ormeig\Ormeig;
@@ -21,9 +22,19 @@ class MockFabrica extends TestCase
     {
         $ormeigMock = $this->createMock(Ormeig::class);
         $ormeigMock->method('getDbcnx')->willReturn($this->pdoMock());
-        $ormeigMock->method('getGestor')->willReturn($this->mockGestor());
+        $ormeigMock->expects($this->any())->method('getGestor')->willReturnCallback(function ($model) use ($ormeigMock) {
+            return new Gestor($ormeigMock, $model);
+        });
 
         return $ormeigMock;
+    }
+
+    public function realOrmeig(): Ormeig
+    {
+        return new Ormeig(
+            driver: Driver::SQLITE,
+            dbname: __DIR__.'/../Seed/test.db',
+        );
     }
 
     /**

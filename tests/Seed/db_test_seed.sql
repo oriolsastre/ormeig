@@ -1,0 +1,1 @@
+INSERT INTO `usuari` (`userId`, `nom`, `email`, `password`) VALUES (1, 'Raskolnikov', 'raskolnikov@ormeig.cat', 'password'), (2, 'Anna Karenina', 'anna.karenina@ormeig.cat', 'password');

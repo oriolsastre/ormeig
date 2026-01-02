@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Sastreo\Ormeig;
 
 use Sastreo\Ormeig\Atributs\Taula;
+use Sastreo\Ormeig\Enums\Consulta as EnumsConsulta;
 use Sastreo\Ormeig\Excepcions\TaulaNoDefinida;
 use Sastreo\Ormeig\Interfaces\Model;
 use Sastreo\Ormeig\Interfaces\OperadorLogic;
@@ -26,9 +27,11 @@ class Consulta
 
     /**
      * @param class-string<Model> $model
+     * @param EnumsConsulta       $tipus
      */
     public function __construct(
         private readonly string $model,
+        public EnumsConsulta $tipus = EnumsConsulta::SELECT,
     ) {
         $this->taula = $this->getTaulaFromModel($this->model);
         $this->condicions = [new LogicI()];

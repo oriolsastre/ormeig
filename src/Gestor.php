@@ -130,24 +130,71 @@ class Gestor
         return new Ordenacio($columna, $ordre);
     }
 
-    public function executaConsulta(Consulta $consulta): void
+    public function executaConsulta(Consulta $consulta): \PDOStatement|false
     {
-        $stmt = $this->ormeig->executaConsulta($consulta);
-        if ($stmt !== false) {
-            // TODO
-            $stmt->closeCursor();
-        }
+        return $this->ormeig->executaConsulta($consulta);
+        // if ($stmt !== false) {
+        //     // TODO
+        //     $stmt->closeCursor();
+        // }
     }
 
     #region CRUD?
-    public function trobaTots(int $limit = 100): void
+    /**
+     * @param int $limit
+     *
+     * @return Model[]
+     */
+    public function trobaTots(int $limit = 100): ?array
     {
         $consulta = $this->consulta()->limit($limit);
-        $this->executaConsulta($consulta);
+        $stmt = $this->executaConsulta($consulta);
+        if ($stmt !== false) {
+            // TODO
+            $rawData = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+            $stmt->closeCursor();
+            $data = [];
+            /** @var array<string, mixed> $raw */
+            foreach ($rawData as $raw) {
+                array_push($data, $this->mapToModel($raw, $this->getModel()));
+            }
+
+            return $data;
+        }
+
+        return null;
     }
+
     // public function trobarPerId
     // public function crear(Model $model): Model {}
     // public function desar(Model $model): Model {}
     // public function eliminar(Model $model): void {}
     #endregion
+    /**
+     * @param array<string, mixed> $data
+     * @param class-string<T>      $model
+     *
+     * @template T of Model
+     *
+     * @return Model
+     */
+    private function mapToModel(array $data, string $model): Model
+    {
+        $mappedData = [];
+        $mapping = $model::getMappedColumns();
+        foreach ($data as $key => $value) {
+            if (isset($mapping[$key])) {
+                $mappedData[$mapping[$key]] = $value;
+            }
+        }
+        $reflection = new \ReflectionClass($model);
+        /** @var Model $instance */
+        $instance = $reflection->newInstanceWithoutConstructor();
+        foreach ($mappedData as $key => $value) {
+            $prop = $reflection->getProperty($key);
+            $prop->setValue($instance, $value);
+        }
+
+        return $instance;
+    }
 }

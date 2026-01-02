@@ -6,4 +6,8 @@ namespace Sastreo\Ormeig\Interfaces;
 
 interface Model
 {
+    /**
+     * @return array<string, string>
+     */
+    public static function getMappedColumns(): array;
 }
