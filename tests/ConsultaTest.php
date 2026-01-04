@@ -12,11 +12,13 @@ use Sastreo\Ormeig\Atributs\Columna as ColumnaAtribut;
 use Sastreo\Ormeig\Atributs\Taula;
 use Sastreo\Ormeig\Columna;
 use Sastreo\Ormeig\Consulta;
+use Sastreo\Ormeig\Enums\Comparacio;
 use Sastreo\Ormeig\Enums\Ordenacio as OrdenacioEnum;
 use Sastreo\Ormeig\Excepcions\TaulaNoDefinida;
 use Sastreo\Ormeig\Interfaces\Model as ModelInterface;
 use Sastreo\Ormeig\Logic\OperadorLogic;
 use Sastreo\Ormeig\Model;
+use Sastreo\Ormeig\Sql\Condicio;
 use Sastreo\Ormeig\Sql\Ordenacio;
 use Sastreo\Ormeig\Tests\Mocks\MockFabrica;
 use Sastreo\Ormeig\Tests\Models\TestModelPk;
@@ -25,6 +27,7 @@ use Sastreo\Ormeig\Tests\Models\TestModelTaulaNoDefinida;
 #[CoversClass(Consulta::class)]
 #[UsesClass(Columna::class)]
 #[UsesClass(ColumnaAtribut::class)]
+#[UsesClass(Condicio::class)]
 #[UsesClass(Taula::class)]
 #[UsesClass(Model::class)]
 #[UsesClass(OperadorLogic::class)]
@@ -53,6 +56,17 @@ class ConsultaTest extends TestCase
         $sql = $consulta->getSql();
         $this->assertIsString($sql);
         $this->assertStringStartsWith('SELECT * FROM test', $sql);
+    }
+
+    #[Test]
+    public function testGetSqlWhere(): void
+    {
+        $consulta = $this->getConsulta();
+        $condicio = new Condicio(TestModelPk::testId(), Comparacio::EQ, 5);
+        $consulta->condicio($condicio);
+        $sql = $consulta->getSql();
+        $this->assertIsString($sql);
+        $this->assertStringStartsWith('SELECT * FROM test WHERE (test.testId = 5)', $sql);
     }
 
     #[Test]

@@ -19,8 +19,7 @@ class Consulta
     private string $taula;
     /** @var array<int, Join> */
     private array $joins = [];
-    /** @var array<int, OperadorLogic> */
-    private array $condicions = [];
+    private LogicI $condicions;
     /** @var array<int, Ordenacio> */
     private array $ordre = [];
     private int $limit = 100;
@@ -34,7 +33,7 @@ class Consulta
         public EnumsConsulta $tipus = EnumsConsulta::SELECT,
     ) {
         $this->taula = $this->getTaulaFromModel($this->model);
-        $this->condicions = [new LogicI()];
+        $this->condicions = new LogicI();
     }
 
     public function join(Join $join): self
@@ -46,7 +45,7 @@ class Consulta
 
     public function condicio(OperadorLogic|Condicio $condicio): self
     {
-        array_push($this->condicions, $condicio);
+        $this->condicions->append($condicio);
 
         return $this;
     }
@@ -77,10 +76,14 @@ class Consulta
     {
         $select = 'SELECT *';
         $from = $this->getFromSql();
+        $where = $this->getWhereSql();
         $ordre = $this->getOrdenacioSql();
         $limit = $this->getLimitSql();
 
         $sql = "$select $from";
+        if ($where !== false) {
+            $sql .= " $where";
+        }
         if ($ordre !== false) {
             $sql .= " $ordre";
         }
@@ -95,6 +98,16 @@ class Consulta
     private function getFromSql(): string
     {
         return "FROM $this->taula";
+    }
+
+    private function getWhereSql(): string|false
+    {
+        if (\count($this->condicions) === 0) {
+            return false;
+        }
+        $sql = 'WHERE '.$this->condicions->toSql();
+
+        return $sql;
     }
 
     private function getOrdenacioSql(): string|false
