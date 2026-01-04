@@ -7,6 +7,7 @@ namespace Sastreo\Ormeig\Tests;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
+use PHPUnit\Framework\Attributes\UsesMethod;
 use PHPUnit\Framework\TestCase;
 use Sastreo\Ormeig\Atributs\Columna;
 use Sastreo\Ormeig\Atributs\Taula;
@@ -27,6 +28,7 @@ use Sastreo\Ormeig\Tests\Seed\DatabaseSetUp;
 #[UsesClass(Ormeig::class)]
 #[UsesClass(OperadorLogic::class)]
 #[UsesClass(Model::class)]
+#[UsesMethod(Gestor::class, 'mapToModel')]
 class GestorSqliteTest extends TestCase implements GestorDatabaseTestInterface
 {
     private MockFabrica $mockFabrica;

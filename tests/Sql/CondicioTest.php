@@ -39,7 +39,7 @@ class CondicioTest extends TestCase
         new Condicio(TestModelPk::columnaInexistent(), Comparacio::EQ, '2');
     }
 
-    # region Comparatius
+    #region Comparatius
     #[Test]
     #[DataProvider('comparatiuProvider')]
     public function testOperadorsComparatius(Comparacio $comparacio): void
@@ -71,8 +71,8 @@ class CondicioTest extends TestCase
         new Condicio(TestModelPk::testId(), $comparacio, '5');
     }
 
-    # endregion
-    # region LIKE
+    #endregion
+    #region LIKE
     #[Test]
     public function testOperadorLike(): void
     {
@@ -94,7 +94,7 @@ class CondicioTest extends TestCase
         $this->expectException(CondicioTipusColumna::class);
         new Condicio(TestModelPk::testNom(), Comparacio::LIKE, 1);
     }
-    # endregion
+    #endregion
 
     public static function comparatiuProvider(): array
     {
