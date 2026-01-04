@@ -6,5 +6,5 @@ namespace Sastreo\Ormeig\Tests;
 
 interface GestorDatabaseTestInterface
 {
-    public function testTrobatTots(): void;
+    public function testTrobaTots(): void;
 }

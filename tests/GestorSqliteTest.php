@@ -41,11 +41,12 @@ class GestorSqliteTest extends TestCase implements GestorDatabaseTestInterface
     }
 
     #[Test]
-    public function testTrobatTots(): void
+    public function testTrobaTots(): void
     {
         $ormeig = $this->mockFabrica->realOrmeig();
         $gestor = $ormeig->getGestor(TestUsuari::class);
-        $tots = $gestor->trobaTots();
+        $consulta = $gestor->trobaTots();
+        $tots = $gestor->executaConsulta($consulta);
         $this->assertIsArray($tots);
         $this->assertContainsOnlyInstancesOf(TestUsuari::class, $tots);
     }

@@ -130,27 +130,15 @@ class Gestor
         return new Ordenacio($columna, $ordre);
     }
 
-    public function executaConsulta(Consulta $consulta): \PDOStatement|false
-    {
-        return $this->ormeig->executaConsulta($consulta);
-        // if ($stmt !== false) {
-        //     // TODO
-        //     $stmt->closeCursor();
-        // }
-    }
-
-    #region CRUD?
     /**
-     * @param int $limit
+     * @param Consulta $consulta
      *
-     * @return Model[]
+     * @return ?Model[]
      */
-    public function trobaTots(int $limit = 100): ?array
+    public function executaConsulta(Consulta $consulta): ?array
     {
-        $consulta = $this->consulta()->limit($limit);
-        $stmt = $this->executaConsulta($consulta);
+        $stmt = $this->ormeig->executaConsulta($consulta);
         if ($stmt !== false) {
-            // TODO
             $rawData = $stmt->fetchAll(\PDO::FETCH_ASSOC);
             $stmt->closeCursor();
             $data = [];
@@ -163,6 +151,15 @@ class Gestor
         }
 
         return null;
+    }
+
+    #region CRUD?
+    /**
+     * @param int $limit
+     */
+    public function trobaTots(int $limit = 100): Consulta
+    {
+        return $this->consulta()->limit($limit);
     }
 
     // public function trobarPerId
