@@ -9,6 +9,6 @@ use Sastreo\Ormeig\Sql\Condicio;
 /**
  * @extends \ArrayAccess<int|string, OperadorLogic|Condicio>
  */
-interface OperadorLogic extends \ArrayAccess
+interface OperadorLogic extends \ArrayAccess, ClausulaSql
 {
 }

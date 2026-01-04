@@ -6,9 +6,8 @@ namespace Sastreo\Ormeig\Sql;
 
 use Sastreo\Ormeig\Columna;
 use Sastreo\Ormeig\Enums\Join as EnumsJoin;
-use Sastreo\Ormeig\Interfaces\ClausulaSql;
 
-class Join implements ClausulaSql
+class Join
 {
     /**
      * @param Columna   $columnaOrigen
