@@ -49,8 +49,7 @@ class GestorSqliteTest extends TestCase implements GestorDatabaseTestInterface
     {
         $ormeig = $this->mockFabrica->realOrmeig();
         $gestor = $ormeig->getGestor(TestUsuari::class);
-        $consulta = $gestor->trobaTots();
-        $tots = $gestor->executaConsulta($consulta);
+        $tots = $gestor->trobaTots();
         $this->assertIsArray($tots);
         $this->assertContainsOnlyInstancesOf(TestUsuari::class, $tots);
 
@@ -75,16 +74,13 @@ class GestorSqliteTest extends TestCase implements GestorDatabaseTestInterface
     {
         $ormeig = $this->mockFabrica->realOrmeig();
         $gestor = $ormeig->getGestor(TestUsuari::class);
-        $consulta = $gestor->trobaPerId(1);
-        $usuari = $gestor->executaConsulta($consulta);
-        $this->assertIsArray($usuari);
-        $this->assertContainsOnlyInstancesOf(TestUsuari::class, $usuari);
-        $this->assertCount(1, $usuari);
+        $usuari = $gestor->trobaPerId(1);
+        $this->assertInstanceOf(TestUsuari::class, $usuari);
 
         $reflectiveName = new \ReflectionProperty(TestUsuari::class, 'nom');
         $reflectiveId = new \ReflectionProperty(TestUsuari::class, 'id');
-        $this->assertEquals(1, $reflectiveId->getValue($usuari[0]));
-        $this->assertEquals('Raskolnikov', $reflectiveName->getValue($usuari[0]));
+        $this->assertEquals(1, $reflectiveId->getValue($usuari));
+        $this->assertEquals('Raskolnikov', $reflectiveName->getValue($usuari));
     }
 
     protected function setUp(): void

@@ -156,10 +156,18 @@ class Gestor
     #region CRUD?
     /**
      * @param int $limit
+     *
+     * @return Model[]
      */
-    public function trobaTots(int $limit = 100): Consulta
+    public function trobaTots(int $limit = 100): array
     {
-        return $this->consulta()->limit($limit);
+        $consulta = $this->consulta()->limit($limit);
+        $resultat = $this->executaConsulta($consulta);
+        if ($resultat === null) {
+            return [];
+        }
+
+        return $resultat;
     }
 
     /**
@@ -167,9 +175,9 @@ class Gestor
      *
      * @param mixed $id
      *
-     * @return Consulta
+     * @return Model|null
      */
-    public function trobaPerId(mixed $id): Consulta
+    public function trobaPerId(mixed $id, bool $halt = false): ?Model
     {
         // TODO: Comprovar que l'$id és del tipus que toca
         $clausPrimaries = $this->getModel()::getClausPrimaries();
@@ -177,6 +185,7 @@ class Gestor
             $id = [$id];
         }
         if (\count($id) !== \count($clausPrimaries)) {
+            // TODO : PENSAR L'ERROR
             throw new \TypeError();
         }
         $consulta = $this->consulta()->limit(1);
@@ -195,7 +204,15 @@ class Gestor
             }
         }
 
-        return $consulta;
+        $resultat = $this->executaConsulta($consulta);
+        if ($resultat === null || \count($resultat) === 0) {
+            return null;
+        } elseif (\count($resultat) === 1) {
+            return $resultat[0];
+        } else {
+            // TODO : PENSAR L'ERROR
+            throw new \TypeError();
+        }
     }
 
     // public function desar(Model $model): Model {}
