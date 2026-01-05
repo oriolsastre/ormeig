@@ -21,4 +21,14 @@ class TestUsuari extends Model
     private string $email;
     #[Columna]
     private string $password;
+
+    public static function getMapping(): array
+    {
+        return [
+            'userId' => 'id',
+            'nom' => 'nom',
+            'email' => 'email',
+            'password' => 'password',
+        ];
+    }
 }

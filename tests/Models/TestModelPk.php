@@ -26,4 +26,14 @@ class TestModelPk extends Model
     public float $testFloat;
 
     public string $noColumna;
+
+    public static function getMapping(): array
+    {
+        return [
+            'testId' => 'testId',
+            'test' => 'test',
+            'test_nom' => 'testNom',
+            'testFloat' => 'testFloat',
+        ];
+    }
 }
