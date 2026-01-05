@@ -49,6 +49,21 @@ class GestorSqliteTest extends TestCase implements GestorDatabaseTestInterface
         $tots = $gestor->executaConsulta($consulta);
         $this->assertIsArray($tots);
         $this->assertContainsOnlyInstancesOf(TestUsuari::class, $tots);
+
+        $raskolnikov = false;
+        $annaKarenina = false;
+        $reflectiveName = new \ReflectionProperty(TestUsuari::class, 'nom');
+        $reflectiveEmail = new \ReflectionProperty(TestUsuari::class, 'email');
+        foreach ($tots as $usuari) {
+            if ($reflectiveName->getValue($usuari) === 'Raskolnikov') {
+                $raskolnikov = true;
+            }
+            if ($reflectiveEmail->getValue($usuari) === 'anna.karenina@ormeig.cat') {
+                $annaKarenina = true;
+            }
+        }
+
+        $this->assertTrue($raskolnikov && $annaKarenina);
     }
 
     protected function setUp(): void
