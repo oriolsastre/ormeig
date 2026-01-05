@@ -162,8 +162,42 @@ class Gestor
         return $this->consulta()->limit($limit);
     }
 
-    // public function trobarPerId
-    // public function crear(Model $model): Model {}
+    /**
+     * Troba una entrada per la seva clau primària. En cas de ser mixta, passa un array associatiu amb propietat => valor.
+     *
+     * @param mixed $id
+     *
+     * @return Consulta
+     */
+    public function trobaPerId(mixed $id): Consulta
+    {
+        // TODO: Comprovar que l'$id és del tipus que toca
+        $clausPrimaries = $this->getModel()::getClausPrimaries();
+        if (!\is_array($id)) {
+            $id = [$id];
+        }
+        if (\count($id) !== \count($clausPrimaries)) {
+            throw new \TypeError();
+        }
+        $consulta = $this->consulta()->limit(1);
+        if (\count($clausPrimaries) === 1) {
+            $pk = $clausPrimaries[0];
+            /** @var Columna $pkColumna */
+            $pkColumna = $this->getModel()::$pk();
+            $consulta->condicio($this->condicio($pkColumna, Comparacio::EQ, $id[0]));
+        } else {
+            foreach ($id as $key => $value) {
+                /** @var string $key */
+                $pk = $clausPrimaries[$key];
+                /** @var Columna $pkColumna */
+                $pkColumna = $this->getModel()::$pk();
+                $consulta->condicio($this->condicio($pkColumna, Comparacio::EQ, $value));
+            }
+        }
+
+        return $consulta;
+    }
+
     // public function desar(Model $model): Model {}
     // public function eliminar(Model $model): void {}
     #endregion

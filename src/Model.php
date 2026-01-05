@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Sastreo\Ormeig;
 
 use Sastreo\Ormeig\Atributs\Columna as ColumnaAtribut;
+use Sastreo\Ormeig\Atributs\Pk;
 use Sastreo\Ormeig\Interfaces\Model as ModelInterface;
 
 abstract class Model implements ModelInterface
@@ -12,6 +13,21 @@ abstract class Model implements ModelInterface
     public static function __callStatic(string $method, mixed $_): Columna
     {
         return new Columna(static::class, $method);
+    }
+
+    public static function getClausPrimaries(): array
+    {
+        $reflectionModel = new \ReflectionClass(static::class);
+        $reflectionProperties = $reflectionModel->getProperties();
+        $clausPrimaries = [];
+        foreach ($reflectionProperties as $property) {
+            $attrsPk = $property->getAttributes(Pk::class);
+            if (\count($attrsPk) === 1) {
+                array_push($clausPrimaries, $property->getName());
+            }
+        }
+
+        return $clausPrimaries;
     }
 
     /**
