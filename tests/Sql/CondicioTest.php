@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Sastreo\Ormeig\Tests;
+namespace Sastreo\Ormeig\Tests\Sql;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
