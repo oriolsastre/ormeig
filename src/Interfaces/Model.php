@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace Sastreo\Ormeig\Interfaces;
 
+use Sastreo\Ormeig\Columna;
+
 interface Model
 {
     /**
-     * @return string[]
+     * @return Columna[]
      */
     public static function getClausPrimaries(): array;
 

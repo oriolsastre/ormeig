@@ -191,16 +191,12 @@ class Gestor
         $consulta = $this->consulta()->limit(1);
         if (\count($clausPrimaries) === 1) {
             $pk = $clausPrimaries[0];
-            /** @var Columna $pkColumna */
-            $pkColumna = $this->getModel()::$pk();
-            $consulta->condicio($this->condicio($pkColumna, Comparacio::EQ, $id[0]));
+            $consulta->condicio($this->condicio($pk, Comparacio::EQ, $id[0]));
         } else {
             foreach ($id as $key => $value) {
                 /** @var string $key */
                 $pk = $clausPrimaries[$key];
-                /** @var Columna $pkColumna */
-                $pkColumna = $this->getModel()::$pk();
-                $consulta->condicio($this->condicio($pkColumna, Comparacio::EQ, $value));
+                $consulta->condicio($this->condicio($pk, Comparacio::EQ, $value));
             }
         }
 

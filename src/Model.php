@@ -6,6 +6,7 @@ namespace Sastreo\Ormeig;
 
 use Sastreo\Ormeig\Atributs\Columna as ColumnaAtribut;
 use Sastreo\Ormeig\Atributs\Pk;
+use Sastreo\Ormeig\Excepcions\ClauPrimariaNoDefinida;
 use Sastreo\Ormeig\Interfaces\Model as ModelInterface;
 
 abstract class Model implements ModelInterface
@@ -15,6 +16,9 @@ abstract class Model implements ModelInterface
         return new Columna(static::class, $method);
     }
 
+    /**
+     * @return Columna[]
+     */
     public static function getClausPrimaries(): array
     {
         $reflectionModel = new \ReflectionClass(static::class);
@@ -23,8 +27,13 @@ abstract class Model implements ModelInterface
         foreach ($reflectionProperties as $property) {
             $attrsPk = $property->getAttributes(Pk::class);
             if (\count($attrsPk) === 1) {
-                array_push($clausPrimaries, $property->getName());
+                $cPColumna = new Columna(static::class, $property->getName());
+                array_push($clausPrimaries, $cPColumna);
             }
+        }
+
+        if (\count($clausPrimaries) === 0) {
+            throw new ClauPrimariaNoDefinida(static::class);
         }
 
         return $clausPrimaries;
