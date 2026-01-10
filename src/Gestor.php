@@ -177,7 +177,7 @@ class Gestor
      *
      * @return Model|null
      */
-    public function trobaPerId(mixed $id, bool $halt = false): ?Model
+    public function trobaPerId(mixed $id): ?Model
     {
         // TODO: Comprovar que l'$id és del tipus que toca
         $clausPrimaries = $this->getModel()::getClausPrimaries();
