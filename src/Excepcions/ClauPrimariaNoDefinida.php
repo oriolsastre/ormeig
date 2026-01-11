@@ -4,12 +4,10 @@ declare(strict_types=1);
 
 namespace Sastreo\Ormeig\Excepcions;
 
-use Sastreo\Ormeig\Interfaces\Model;
-
 class ClauPrimariaNoDefinida extends \ValueError
 {
     /**
-     * @param class-string<Model> $model
+     * @param class-string $model
      */
     public function __construct(string $model, int $code = 0, ?\Throwable $previous = null)
     {

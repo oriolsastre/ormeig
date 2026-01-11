@@ -4,15 +4,18 @@ declare(strict_types=1);
 
 namespace Sastreo\Ormeig\Tests\Atributs;
 
-use Attribute;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\Attributes\UsesClass;
+use PHPUnit\Framework\Attributes\UsesFunction;
 use PHPUnit\Framework\TestCase;
-use ReflectionClass;
 use Sastreo\Ormeig\Atributs\Fk;
+use Sastreo\Ormeig\Excepcions\TaulaNoDefinida;
 use Sastreo\Ormeig\Tests\Models\TestModelPk;
 
 #[CoversClass(Fk::class)]
+#[UsesClass(TaulaNoDefinida::class)]
+#[UsesFunction('Sastreo\Ormeig\classEsModel')]
 class FkTest extends TestCase
 {
     #[Test]
@@ -21,7 +24,7 @@ class FkTest extends TestCase
         $columna = new Fk(TestModelPk::class, 'testId');
         $this->assertInstanceOf(Fk::class, $columna);
 
-        $this->expectException(\Exception::class);
+        $this->expectException(TaulaNoDefinida::class);
         new Fk(TestCase::class, 'someColumn');
     }
 

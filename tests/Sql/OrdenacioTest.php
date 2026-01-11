@@ -7,13 +7,13 @@ namespace Sastreo\Ormeig\Tests\Sql;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
+use PHPUnit\Framework\Attributes\UsesFunction;
 use PHPUnit\Framework\TestCase;
 use Sastreo\Ormeig\Atributs\Columna as ColumnaAtribut;
 use Sastreo\Ormeig\Atributs\Taula;
 use Sastreo\Ormeig\Columna;
 use Sastreo\Ormeig\Enums\Ordenacio as OrdenacioEnum;
 use Sastreo\Ormeig\Excepcions\ColumnaNoExisteix;
-use Sastreo\Ormeig\Model;
 use Sastreo\Ormeig\Sql\Ordenacio;
 use Sastreo\Ormeig\Tests\Models\TestModelPk;
 
@@ -21,25 +21,25 @@ use Sastreo\Ormeig\Tests\Models\TestModelPk;
 #[UsesClass(Columna::class)]
 #[UsesClass(ColumnaAtribut::class)]
 #[UsesClass(Taula::class)]
-#[UsesClass(Model::class)]
 #[UsesClass(ColumnaNoExisteix::class)]
+#[UsesFunction('Sastreo\Ormeig\classEsModel')]
 class OrdenacioTest extends TestCase
 {
     #[Test]
     public function testConstructor(): void
     {
-        $ordenacio = new Ordenacio(TestModelPk::testId(), OrdenacioEnum::ASC);
+        $ordenacio = new Ordenacio(new Columna(TestModelPk::class, 'testId'), OrdenacioEnum::ASC);
         $this->assertInstanceOf(Ordenacio::class, $ordenacio);
 
         // Error
         $this->expectException(ColumnaNoExisteix::class);
-        new Ordenacio(TestModelPk::columnaInexistent(), OrdenacioEnum::ASC);
+        new Ordenacio(new Columna(TestModelPk::class, 'columnaInexistent'), OrdenacioEnum::ASC);
     }
 
     #[Test]
     public function testToSql(): void
     {
-        $ordenacio = new Ordenacio(TestModelPk::testId(), OrdenacioEnum::ASC);
+        $ordenacio = new Ordenacio(new Columna(TestModelPk::class, 'testId'), OrdenacioEnum::ASC);
         $this->assertEquals('test.testId ASC', $ordenacio->toSql());
     }
 }

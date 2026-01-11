@@ -8,6 +8,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
+use PHPUnit\Framework\Attributes\UsesFunction;
 use PHPUnit\Framework\TestCase;
 use Sastreo\Ormeig\Atributs\Columna as ColumnaAtribut;
 use Sastreo\Ormeig\Atributs\Taula;
@@ -16,7 +17,6 @@ use Sastreo\Ormeig\Enums\Comparacio;
 use Sastreo\Ormeig\Logic\LogicI;
 use Sastreo\Ormeig\Logic\LogicO;
 use Sastreo\Ormeig\Logic\OperadorLogic;
-use Sastreo\Ormeig\Model;
 use Sastreo\Ormeig\Sql\Condicio;
 use Sastreo\Ormeig\Tests\Mocks\StubFabrica;
 use Sastreo\Ormeig\Tests\Models\TestModelPk;
@@ -28,7 +28,7 @@ use Sastreo\Ormeig\Tests\Models\TestModelPk;
 #[UsesClass(Condicio::class)]
 #[UsesClass(ColumnaAtribut::class)]
 #[UsesClass(Taula::class)]
-#[UsesClass(Model::class)]
+#[UsesFunction('Sastreo\Ormeig\classEsModel')]
 class OperadorLogicTest extends TestCase
 {
     #[Test]
@@ -45,8 +45,8 @@ class OperadorLogicTest extends TestCase
     #[Test]
     public function afegirCondicionsTest(): void
     {
-        $cond1 = new Condicio(TestModelPk::testId(), Comparacio::EQ, 2);
-        $cond2 = new Condicio(TestModelPk::testNom(), Comparacio::EQ, 'Nom del test');
+        $cond1 = new Condicio(new Columna(TestModelPk::class, 'testId'), Comparacio::EQ, 2);
+        $cond2 = new Condicio(new Columna(TestModelPk::class, 'testNom'), Comparacio::EQ, 'Nom del test');
 
         $logic = new LogicI($cond1, $cond2);
         $this->assertInstanceOf(OperadorLogic::class, $logic);

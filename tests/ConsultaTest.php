@@ -6,6 +6,7 @@ namespace Sastreo\Ormeig\Tests;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\UsesClass;
+use PHPUnit\Framework\Attributes\UsesFunction;
 use PHPUnit\Framework\Test;
 use PHPUnit\Framework\TestCase;
 use Sastreo\Ormeig\Atributs\Columna as ColumnaAtribut;
@@ -15,9 +16,7 @@ use Sastreo\Ormeig\Consulta;
 use Sastreo\Ormeig\Enums\Comparacio;
 use Sastreo\Ormeig\Enums\Ordenacio as OrdenacioEnum;
 use Sastreo\Ormeig\Excepcions\TaulaNoDefinida;
-use Sastreo\Ormeig\Interfaces\Model as ModelInterface;
 use Sastreo\Ormeig\Logic\OperadorLogic;
-use Sastreo\Ormeig\Model;
 use Sastreo\Ormeig\Sql\Condicio;
 use Sastreo\Ormeig\Sql\Ordenacio;
 use Sastreo\Ormeig\Tests\Mocks\MockFabrica;
@@ -29,10 +28,10 @@ use Sastreo\Ormeig\Tests\Models\TestModelTaulaNoDefinida;
 #[UsesClass(ColumnaAtribut::class)]
 #[UsesClass(Condicio::class)]
 #[UsesClass(Taula::class)]
-#[UsesClass(Model::class)]
 #[UsesClass(OperadorLogic::class)]
 #[UsesClass(Ordenacio::class)]
 #[UsesClass(TaulaNoDefinida::class)]
+#[UsesFunction('Sastreo\Ormeig\classEsModel')]
 class ConsultaTest extends TestCase
 {
     #[Test]
@@ -62,7 +61,7 @@ class ConsultaTest extends TestCase
     public function testGetSqlWhere(): void
     {
         $consulta = $this->getConsulta();
-        $condicio = new Condicio(TestModelPk::testId(), Comparacio::EQ, 5);
+        $condicio = new Condicio(new Columna(TestModelPk::class, 'testId'), Comparacio::EQ, 5);
         $consulta->condicio($condicio);
         $sql = $consulta->getSql();
         $this->assertIsString($sql);
@@ -97,14 +96,14 @@ class ConsultaTest extends TestCase
     public function testGetSqlOrderBy(): void
     {
         $consulta = $this->getConsulta(TestModelPk::class);
-        $consulta->ordena(new Ordenacio(TestModelPk::testId(), OrdenacioEnum::ASC))->limit(0);
+        $consulta->ordena(new Ordenacio(new Columna(TestModelPk::class, 'testId'), OrdenacioEnum::ASC))->limit(0);
         $sql = $consulta->getSql();
         $this->assertIsString($sql);
         $this->assertEquals('SELECT * FROM test ORDER BY test.testId ASC;', $sql);
 
         // Multiples ordres
         $consulta = $this->getConsulta(TestModelPk::class);
-        $consulta->ordena(new Ordenacio(TestModelPk::testId(), OrdenacioEnum::ASC))->ordena(new Ordenacio(TestModelPk::testNom(), OrdenacioEnum::DESC))->limit(0);
+        $consulta->ordena(new Ordenacio(new Columna(TestModelPk::class, 'testId'), OrdenacioEnum::ASC))->ordena(new Ordenacio(new Columna(TestModelPk::class, 'testNom'), OrdenacioEnum::DESC))->limit(0);
         $sql = $consulta->getSql();
         $this->assertIsString($sql);
         $this->assertEquals('SELECT * FROM test ORDER BY test.testId ASC, test.test_nom DESC;', $sql);
@@ -112,7 +111,7 @@ class ConsultaTest extends TestCase
 
     #endregion SQL
     /**
-     * @param class-string<ModelInterface> $model
+     * @param class-string $model
      *
      * @return Consulta
      */

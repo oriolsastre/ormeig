@@ -7,10 +7,9 @@ namespace Sastreo\Ormeig\Tests\Models;
 use Sastreo\Ormeig\Atributs\Columna;
 use Sastreo\Ormeig\Atributs\Pk;
 use Sastreo\Ormeig\Atributs\Taula;
-use Sastreo\Ormeig\Model;
 
 #[Taula('test')]
-class TestModelPk extends Model
+class TestModelPk
 {
     #[Columna]
     #[Pk]

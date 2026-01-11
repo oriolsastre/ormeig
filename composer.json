@@ -24,6 +24,9 @@
         },
         "classmap": [
             "src/logic/Logic.php"
+        ],
+        "files": [
+            "src/Model.php"
         ]
     },
     "autoload-dev": {

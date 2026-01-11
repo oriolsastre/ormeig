@@ -32,7 +32,7 @@ I executa `composer update`.
 
 ### Models
 
-Cal anotar els models i han d'extendre la classe `Sastreo\Ormeig\Model`.
+Cal anotar els models amb l'atribut de `Sastreo\Ormeig\Atributs\Taula`.
 
 ```php
 <?php
@@ -44,10 +44,9 @@ namespace El\Teu\Projecte;
 use Sastreo\Ormeig\Atributs\Columna;
 use Sastreo\Ormeig\Atributs\Pk;
 use Sastreo\Ormeig\Atributs\Taula;
-use Sastreo\Ormeig\Model;
 
 #[Taula('user')]
-class Usuari extends Model
+class Usuari
 {
     #[Columna]
     #[Pk]

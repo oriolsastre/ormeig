@@ -7,6 +7,7 @@ namespace Sastreo\Ormeig\Tests;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
+use PHPUnit\Framework\Attributes\UsesFunction;
 use PHPUnit\Framework\TestCase;
 use Sastreo\Ormeig\Atributs\Columna as AtributsColumna;
 use Sastreo\Ormeig\Atributs\Taula;
@@ -21,6 +22,7 @@ use Sastreo\Ormeig\Tests\Models\TestModelTaulaNoDefinida;
 #[UsesClass(Taula::class)]
 #[UsesClass(ColumnaNoExisteix::class)]
 #[UsesClass(TaulaNoDefinida::class)]
+#[UsesFunction('Sastreo\Ormeig\classEsModel')]
 class ColumnaTest extends TestCase
 {
     #[Test]

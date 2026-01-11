@@ -8,7 +8,6 @@ use Sastreo\Ormeig\Atributs\Columna as ColumnaAtribut;
 use Sastreo\Ormeig\Atributs\Taula;
 use Sastreo\Ormeig\Excepcions\ColumnaNoExisteix;
 use Sastreo\Ormeig\Excepcions\TaulaNoDefinida;
-use Sastreo\Ormeig\Interfaces\Model;
 
 class Columna
 {
@@ -17,15 +16,17 @@ class Columna
     public readonly string $tipus;
 
     /**
-     * @param class-string<Model> $model
-     * @param string              $columna
+     * @param class-string $model
+     * @param string       $columna
      *
+     * @throws TaulaNoDefinida
      * @throws ColumnaNoExisteix
      */
     public function __construct(
         public readonly string $model,
         public readonly string $columna,
     ) {
+        classEsModel($this->model);
         $reflectModel = new \ReflectionClass($this->model);
         $this->taulaSql = $this->getTaulaSql($reflectModel);
         try {
@@ -63,11 +64,11 @@ class Columna
     }
 
     /**
-     * @param \ReflectionClass<Model> $reflectModel
+     * @param \ReflectionClass<object> $reflectModel
      *
      * @return string
      *
-     * @throws ColumnaNoExisteix
+     * @throws TaulaNoDefinida
      */
     private function getTaulaSql(\ReflectionClass $reflectModel): string
     {

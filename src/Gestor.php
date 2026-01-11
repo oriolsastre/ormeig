@@ -11,7 +11,6 @@ use Sastreo\Ormeig\Enums\Comparacio;
 use Sastreo\Ormeig\Enums\Join as JoinEnum;
 use Sastreo\Ormeig\Enums\Ordenacio as OrdenacioEnum;
 use Sastreo\Ormeig\Excepcions\ClauPrimariaNoDefinida;
-use Sastreo\Ormeig\Interfaces\Model;
 use Sastreo\Ormeig\Sql\Condicio;
 use Sastreo\Ormeig\Sql\Join;
 use Sastreo\Ormeig\Sql\Ordenacio;
@@ -23,14 +22,14 @@ class Gestor
     private array $pk;
 
     /**
-     * @param class-string<T> $model
-     *
-     * @template T of Model
+     * @param class-string $model
      */
     public function __construct(
         private readonly Ormeig $ormeig,
         public readonly string $model,
     ) {
+        classEsModel($this->model);
+
         $this->pk = [];
         $reflectionModel = new \ReflectionClass($model);
 
@@ -64,7 +63,7 @@ class Gestor
     }
 
     /**
-     * @return class-string<Model>
+     * @return class-string
      */
     public function getModel(): string
     {
@@ -133,7 +132,7 @@ class Gestor
     /**
      * @param Consulta $consulta
      *
-     * @return ?Model[]
+     * @return ?object[]
      */
     public function executaConsulta(Consulta $consulta): ?array
     {
@@ -157,7 +156,7 @@ class Gestor
     /**
      * @param int $limit
      *
-     * @return Model[]
+     * @return object[]
      */
     public function trobaTots(int $limit = 100): array
     {
@@ -175,12 +174,12 @@ class Gestor
      *
      * @param mixed $id
      *
-     * @return Model|null
+     * @return object|null
      */
-    public function trobaPerId(mixed $id): ?Model
+    public function trobaPerId(mixed $id): ?object
     {
         // TODO: Comprovar que l'$id és del tipus que toca
-        $clausPrimaries = $this->getModel()::getClausPrimaries();
+        $clausPrimaries = getClausPrimaries($this->getModel());
         if (!\is_array($id)) {
             $id = [$id];
         }
@@ -216,23 +215,20 @@ class Gestor
     #endregion
     /**
      * @param array<string, mixed> $data
-     * @param class-string<T>      $model
+     * @param class-string         $modelClass
      *
-     * @template T of Model
-     *
-     * @return Model
+     * @return object
      */
-    private function mapToModel(array $data, string $model): Model
+    private function mapToModel(array $data, string $modelClass): object
     {
         $mappedData = [];
-        $mapping = $model::getMappedColumns();
+        $mapping = getMappedColumns($modelClass);
         foreach ($data as $key => $value) {
             if (isset($mapping[$key])) {
                 $mappedData[$mapping[$key]] = $value;
             }
         }
-        $reflection = new \ReflectionClass($model);
-        /** @var Model $instance */
+        $reflection = new \ReflectionClass($modelClass);
         $instance = $reflection->newInstanceWithoutConstructor();
         foreach ($mappedData as $key => $value) {
             $prop = $reflection->getProperty($key);

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Sastreo\Ormeig;
 
 use Sastreo\Ormeig\Enums\Driver;
-use Sastreo\Ormeig\Interfaces\Model;
 
 class Ormeig
 {
@@ -49,11 +48,9 @@ class Ormeig
     }
 
     /**
-     * @param class-string<T> $model
+     * @param class-string $model
      *
      * @return Gestor
-     *
-     * @template T of Model
      */
     public function getGestor(string $model): Gestor
     {

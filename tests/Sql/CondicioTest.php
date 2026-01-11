@@ -8,6 +8,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
+use PHPUnit\Framework\Attributes\UsesFunction;
 use PHPUnit\Framework\TestCase;
 use Sastreo\Ormeig\Atributs\Columna as ColumnaAtribut;
 use Sastreo\Ormeig\Atributs\Taula;
@@ -15,7 +16,6 @@ use Sastreo\Ormeig\Columna;
 use Sastreo\Ormeig\Enums\Comparacio;
 use Sastreo\Ormeig\Excepcions\ColumnaNoExisteix;
 use Sastreo\Ormeig\Excepcions\CondicioTipusColumna;
-use Sastreo\Ormeig\Model;
 use Sastreo\Ormeig\Sql\Condicio;
 use Sastreo\Ormeig\Tests\Models\TestModelPk;
 
@@ -24,19 +24,19 @@ use Sastreo\Ormeig\Tests\Models\TestModelPk;
 #[UsesClass(Columna::class)]
 #[UsesClass(ColumnaAtribut::class)]
 #[UsesClass(Taula::class)]
-#[UsesClass(Model::class)]
 #[UsesClass(ColumnaNoExisteix::class)]
+#[UsesFunction('Sastreo\Ormeig\classEsModel')]
 class CondicioTest extends TestCase
 {
     #[Test]
     public function testConstructor(): void
     {
-        $condicio = new Condicio(TestModelPk::testId(), Comparacio::EQ, 2);
+        $condicio = new Condicio(new Columna(TestModelPk::class, 'testId'), Comparacio::EQ, 2);
         $this->assertInstanceOf(Condicio::class, $condicio);
 
         // Error
         $this->expectException(ColumnaNoExisteix::class);
-        new Condicio(TestModelPk::columnaInexistent(), Comparacio::EQ, '2');
+        new Condicio(new Columna(TestModelPk::class, 'columnaInexistent'), Comparacio::EQ, '2');
     }
 
     #region Comparatius
@@ -45,12 +45,12 @@ class CondicioTest extends TestCase
     public function testOperadorsComparatius(Comparacio $comparacio): void
     {
         // Prova amb enter
-        $condicio = new Condicio(TestModelPk::testId(), $comparacio, 5);
+        $condicio = new Condicio(new Columna(TestModelPk::class, 'testId'), $comparacio, 5);
         $this->assertInstanceOf(Condicio::class, $condicio);
         $this->assertEquals("test.testId {$comparacio->value} 5", $condicio->toSql());
 
         // Prova amb float
-        $condicio = new Condicio(TestModelPk::testFloat(), $comparacio, 5.5);
+        $condicio = new Condicio(new Columna(TestModelPk::class, 'testFloat'), $comparacio, 5.5);
         $this->assertInstanceOf(Condicio::class, $condicio);
         $this->assertEquals("test.testFloat {$comparacio->value} 5.5", $condicio->toSql());
     }
@@ -60,7 +60,7 @@ class CondicioTest extends TestCase
     public function testOperadorsComparatiusFallaColumna(Comparacio $comparacio): void
     {
         $this->expectException(CondicioTipusColumna::class);
-        new Condicio(TestModelPk::testNom(), $comparacio, 5);
+        new Condicio(new Columna(TestModelPk::class, 'testNom'), $comparacio, 5);
     }
 
     #[Test]
@@ -68,7 +68,7 @@ class CondicioTest extends TestCase
     public function testOperadorsComparatiusFallaValor(Comparacio $comparacio): void
     {
         $this->expectException(CondicioTipusColumna::class);
-        new Condicio(TestModelPk::testId(), $comparacio, '5');
+        new Condicio(new Columna(TestModelPk::class, 'testId'), $comparacio, '5');
     }
 
     #endregion
@@ -76,7 +76,7 @@ class CondicioTest extends TestCase
     #[Test]
     public function testOperadorLike(): void
     {
-        $condicio = new Condicio(TestModelPk::testNom(), Comparacio::LIKE, '%Value%');
+        $condicio = new Condicio(new Columna(TestModelPk::class, 'testNom'), Comparacio::LIKE, '%Value%');
         $this->assertInstanceOf(Condicio::class, $condicio);
         $this->assertEquals("test.test_nom LIKE '%Value%'", $condicio->toSql());
     }
@@ -85,14 +85,14 @@ class CondicioTest extends TestCase
     public function testOperadorLikeFallaColumna(): void
     {
         $this->expectException(CondicioTipusColumna::class);
-        new Condicio(TestModelPk::testId(), Comparacio::LIKE, '5');
+        new Condicio(new Columna(TestModelPk::class, 'testId'), Comparacio::LIKE, '5');
     }
 
     #[Test]
     public function testOperadorLikeFallaValor(): void
     {
         $this->expectException(CondicioTipusColumna::class);
-        new Condicio(TestModelPk::testNom(), Comparacio::LIKE, 1);
+        new Condicio(new Columna(TestModelPk::class, 'testNom'), Comparacio::LIKE, 1);
     }
     #endregion
 

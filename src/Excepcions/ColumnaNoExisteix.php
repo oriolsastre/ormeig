@@ -4,17 +4,15 @@ declare(strict_types=1);
 
 namespace Sastreo\Ormeig\Excepcions;
 
-use Sastreo\Ormeig\Interfaces\Model;
-
 class ColumnaNoExisteix extends \ValueError
 {
     /**
      * Summary of __construct.
      *
-     * @param string              $columna
-     * @param class-string<Model> $model
-     * @param int                 $code
-     * @param \Throwable|null     $previous
+     * @param string          $columna
+     * @param class-string    $model
+     * @param int             $code
+     * @param \Throwable|null $previous
      */
     public function __construct(string $columna, string $model, int $code = 0, ?\Throwable $previous = null)
     {

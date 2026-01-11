@@ -7,7 +7,6 @@ namespace Sastreo\Ormeig\Tests\Mocks;
 use PHPUnit\Framework\TestCase;
 use Sastreo\Ormeig\Enums\Driver;
 use Sastreo\Ormeig\Gestor;
-use Sastreo\Ormeig\Interfaces\Model;
 use Sastreo\Ormeig\Ormeig;
 use Sastreo\Ormeig\Tests\Models\TestModelPk;
 
