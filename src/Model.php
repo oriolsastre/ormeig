@@ -7,7 +7,9 @@ namespace Sastreo\Ormeig;
 use Sastreo\Ormeig\Atributs\Columna as ColumnaAtribut;
 use Sastreo\Ormeig\Atributs\Pk;
 use Sastreo\Ormeig\Atributs\Taula;
+use Sastreo\Ormeig\Excepcions\ClauPrimariaInvalida;
 use Sastreo\Ormeig\Excepcions\ClauPrimariaNoDefinida;
+use Sastreo\Ormeig\Excepcions\ColumnaNoExisteix;
 use Sastreo\Ormeig\Excepcions\TaulaNoDefinida;
 
 /**
@@ -53,6 +55,47 @@ function getClausPrimaries(string $modelClass): array
     }
 
     return $clausPrimaries;
+}
+
+/**
+ * @param class-string $modelClass
+ * @param mixed        $ids
+ *
+ * @return array<string, mixed>
+ *
+ * @throws ClauPrimariaInvalida
+ */
+function clausPrimariesValides(string $modelClass, mixed $ids): array
+{
+    classEsModel($modelClass);
+
+    $clausPrimaries = getClausPrimaries($modelClass);
+    if (!\is_array($ids)) {
+        if (\is_object($ids)) {
+            throw new ClauPrimariaInvalida($modelClass, $ids);
+        } else {
+            $ids = [$clausPrimaries[0]->columna => $ids];
+        }
+    }
+    /** @var array<string, mixed> $ids */
+    if (\count($ids) !== \count($clausPrimaries)) {
+        throw new ClauPrimariaInvalida($modelClass, $ids);
+    }
+    foreach ($ids as $field => $_) {
+        try {
+            new Columna($modelClass, $field);
+        } catch (\Throwable $th) {
+            if ($th instanceof ColumnaNoExisteix) {
+                throw new ClauPrimariaInvalida($modelClass, $ids);
+            }
+        }
+        $isPk = array_filter($clausPrimaries, fn (Columna $pk) => $pk->columna === $field);
+        if (\count($isPk) !== 1) {
+            throw new ClauPrimariaInvalida($modelClass, $ids);
+        }
+    }
+
+    return $ids;
 }
 
 /**

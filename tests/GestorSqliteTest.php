@@ -32,6 +32,7 @@ use Sastreo\Ormeig\Tests\Seed\DatabaseSetUp;
 #[UsesClass(Condicio::class)]
 #[UsesFunction('Sastreo\Ormeig\classEsModel')]
 #[UsesFunction('Sastreo\Ormeig\getClausPrimaries')]
+#[UsesFunction('Sastreo\Ormeig\clausPrimariesValides')]
 #[UsesFunction('Sastreo\Ormeig\getMappedColumns')]
 class GestorSqliteTest extends TestCase implements GestorDatabaseTestInterface
 {

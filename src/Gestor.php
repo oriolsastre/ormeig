@@ -178,25 +178,14 @@ class Gestor
      */
     public function trobaPerId(mixed $id): ?object
     {
-        // TODO: Comprovar que l'$id és del tipus que toca
+        $id = clausPrimariesValides($this->getModel(), $id);
         $clausPrimaries = getClausPrimaries($this->getModel());
-        if (!\is_array($id)) {
-            $id = [$id];
-        }
-        if (\count($id) !== \count($clausPrimaries)) {
-            // TODO : PENSAR L'ERROR
-            throw new \TypeError();
-        }
+
         $consulta = $this->consulta()->limit(1);
-        if (\count($clausPrimaries) === 1) {
-            $pk = $clausPrimaries[0];
-            $consulta->condicio($this->condicio($pk, Comparacio::EQ, $id[0]));
-        } else {
-            foreach ($id as $key => $value) {
-                /** @var string $key */
-                $pk = $clausPrimaries[$key];
-                $consulta->condicio($this->condicio($pk, Comparacio::EQ, $value));
-            }
+
+        foreach ($id as $key => $value) {
+            $pk = array_filter($clausPrimaries, fn (Columna $columna) => $columna->columna === $key)[0];
+            $consulta->condicio($this->condicio($pk, Comparacio::EQ, $value));
         }
 
         $resultat = $this->executaConsulta($consulta);
