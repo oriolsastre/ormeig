@@ -6,18 +6,17 @@ namespace Sastreo\Ormeig;
 
 use Sastreo\Ormeig\Atributs\Taula;
 use Sastreo\Ormeig\Enums\Consulta as EnumsConsulta;
-use Sastreo\Ormeig\Excepcions\TaulaNoDefinida;
 use Sastreo\Ormeig\Interfaces\OperadorLogic;
 use Sastreo\Ormeig\Logic\LogicI;
 use Sastreo\Ormeig\Sql\Condicio;
-use Sastreo\Ormeig\Sql\Join;
+// use Sastreo\Ormeig\Sql\Join;
 use Sastreo\Ormeig\Sql\Ordenacio;
 
 class Consulta
 {
     private string $taula;
-    /** @var array<int, Join> */
-    private array $joins = [];
+    // /** @var array<int, Join> */
+    // private array $joins = [];
     private LogicI $condicions;
     /** @var array<int, Ordenacio> */
     private array $ordre = [];
@@ -36,12 +35,12 @@ class Consulta
         $this->condicions = new LogicI();
     }
 
-    public function join(Join $join): self
-    {
-        array_push($this->joins, $join);
+    // public function join(Join $join): self
+    // {
+    //     array_push($this->joins, $join);
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
     public function condicio(OperadorLogic|Condicio $condicio): self
     {
@@ -74,23 +73,34 @@ class Consulta
     #region SQL
     public function getSql(): string
     {
-        $select = 'SELECT *';
+        $sql = '';
         $from = $this->getFromSql();
         $where = $this->getWhereSql();
         $ordre = $this->getOrdenacioSql();
         $limit = $this->getLimitSql();
-
-        $sql = "$select $from";
-        if ($where !== false) {
-            $sql .= " $where";
+        switch ($this->tipus) {
+            case EnumsConsulta::SELECT:
+                $sql_type = 'SELECT *';
+                $sql = "$sql_type $from";
+                if ($where !== false) {
+                    $sql .= " $where";
+                }
+                if ($ordre !== false) {
+                    $sql .= " $ordre";
+                }
+                if ($limit !== false) {
+                    $sql .= " $limit";
+                }
+                $sql .= ';';
+                break;
+            case EnumsConsulta::DELETE:
+                if ($where === false) {
+                    // TODO : Pensar error
+                    throw new \Exception('No pots esborrar sense condicions');
+                }
+                $sql = "DELETE $from $where;";
+                break;
         }
-        if ($ordre !== false) {
-            $sql .= " $ordre";
-        }
-        if ($limit !== false) {
-            $sql .= " $limit";
-        }
-        $sql .= ';';
 
         return $sql;
     }
@@ -137,16 +147,11 @@ class Consulta
      * @param class-string $model
      *
      * @return string
-     *
-     * @throws TaulaNoDefinida
      */
     private function getTaulaFromModel(string $model): string
     {
         $reflectModel = new \ReflectionClass($model);
         $attrTaula = $reflectModel->getAttributes(Taula::class);
-        if (\count($attrTaula) !== 1) {
-            throw new TaulaNoDefinida($model);
-        }
 
         return $attrTaula[0]->newInstance()->nom ?? $reflectModel->getShortName();
     }
