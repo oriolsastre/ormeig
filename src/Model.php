@@ -124,3 +124,11 @@ function getMappedColumns(string $modelClass): array
 
     return $mappedColumns;
 }
+
+function getValorColumnaModel(object $model, Columna $columna): mixed
+{
+    $reflectionModel = new \ReflectionClass($model);
+    $property = $reflectionModel->getProperty($columna->columna);
+
+    return $property->getValue($model);
+}

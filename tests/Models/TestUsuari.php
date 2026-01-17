@@ -21,6 +21,12 @@ class TestUsuari
     #[Columna]
     private string $password;
 
+    public function __construct(int $id = 0, string $nom = '')
+    {
+        $this->id = $id;
+        $this->nom = $nom;
+    }
+
     public static function getMapping(): array
     {
         return [

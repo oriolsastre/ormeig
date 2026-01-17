@@ -16,6 +16,7 @@ use Sastreo\Ormeig\Excepcions\ClauPrimariaInvalida;
 use Sastreo\Ormeig\Excepcions\ClauPrimariaNoDefinida;
 use Sastreo\Ormeig\Excepcions\ColumnaNoExisteix;
 use Sastreo\Ormeig\Excepcions\TaulaNoDefinida;
+use Sastreo\Ormeig\Tests\Models\TestEntitat;
 use Sastreo\Ormeig\Tests\Models\TestModelMultiplePk;
 use Sastreo\Ormeig\Tests\Models\TestModelNoPk;
 use Sastreo\Ormeig\Tests\Models\TestModelPk;
@@ -25,11 +26,13 @@ use function Sastreo\Ormeig\classEsModel;
 use function Sastreo\Ormeig\clausPrimariesValides;
 use function Sastreo\Ormeig\getClausPrimaries;
 use function Sastreo\Ormeig\getMappedColumns;
+use function Sastreo\Ormeig\getValorColumnaModel;
 
 #[CoversFunction('Sastreo\Ormeig\classEsModel')]
 #[CoversFunction('Sastreo\Ormeig\getClausPrimaries')]
 #[CoversFunction('Sastreo\Ormeig\clausPrimariesValides')]
 #[CoversFunction('Sastreo\Ormeig\getMappedColumns')]
+#[CoversFunction('Sastreo\Ormeig\getValorColumnaModel')]
 #[UsesClass(Taula::class)]
 #[UsesClass(Columna::class)]
 #[UsesClass(ColumnaAtribut::class)]
@@ -115,6 +118,23 @@ class ModelTest extends TestCase
         $this->assertIsArray($columnsTest);
         $this->assertSame(TestModelPk::getMapping(), $columnsTest);
         $this->assertArrayNotHasKey('noColumna', $columnsTest);
+    }
+
+    #[Test]
+    public function testGetValorColumnaModelPublic(): void
+    {
+        $entitat = new TestEntitat();
+        $entitat->testEntitatId = 1;
+        $columna = new Columna(TestEntitat::class, 'testEntitatId');
+        $this->assertSame(1, getValorColumnaModel($entitat, $columna));
+    }
+
+    #[Test]
+    public function testGetValorColumnaModelPrivate(): void
+    {
+        $usuari = new TestUsuari(2);
+        $columna = new Columna(TestUsuari::class, 'id');
+        $this->assertSame(2, getValorColumnaModel($usuari, $columna));
     }
 
     public static function clausPrimariesProvider(): array
