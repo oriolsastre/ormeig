@@ -12,6 +12,7 @@ use Sastreo\Ormeig\Enums\Consulta as ConsultaEnum;
 use Sastreo\Ormeig\Enums\Join as JoinEnum;
 use Sastreo\Ormeig\Enums\Ordenacio as OrdenacioEnum;
 use Sastreo\Ormeig\Excepcions\ClauPrimariaNoDefinida;
+use Sastreo\Ormeig\Excepcions\ColumnaNoExisteix;
 use Sastreo\Ormeig\Sql\Condicio;
 use Sastreo\Ormeig\Sql\Join;
 use Sastreo\Ormeig\Sql\Ordenacio;
@@ -102,16 +103,20 @@ class Gestor
     }
 
     /**
-     * @param Columna    $columna
-     * @param Comparacio $comparacio
-     * @param mixed      $valor
+     * @param Columna|string $columna
+     * @param Comparacio     $comparacio
+     * @param mixed          $valor
      *
      * @return Condicio
      *
-     * @throws Excepcions\ColumnaNoExisteix
+     * @throws ColumnaNoExisteix
      */
-    public function condicio(Columna $columna, Comparacio $comparacio, mixed $valor): Condicio
+    public function condicio(Columna|string $columna, Comparacio $comparacio, mixed $valor): Condicio
     {
+        if (\is_string($columna)) {
+            $columna = new Columna($this->getModel(), $columna);
+        }
+
         // TODO: S'hauria de controlar que la taula de la columna està inclosa al FORM o JOIN
         return new Condicio($columna, $comparacio, $valor);
     }
@@ -119,15 +124,19 @@ class Gestor
     /**
      * Summary of ordenacio.
      *
-     * @param Columna       $columna
-     * @param OrdenacioEnum $ordre
+     * @param Columna|string $columna
+     * @param OrdenacioEnum  $ordre
      *
      * @return Ordenacio
      *
-     * @throws Excepcions\ColumnaNoExisteix
+     * @throws ColumnaNoExisteix
      */
-    public function ordenacio(Columna $columna, OrdenacioEnum $ordre): Ordenacio
+    public function ordenacio(Columna|string $columna, OrdenacioEnum $ordre): Ordenacio
     {
+        if (\is_string($columna)) {
+            $columna = new Columna($this->getModel(), $columna);
+        }
+
         return new Ordenacio($columna, $ordre);
     }
 

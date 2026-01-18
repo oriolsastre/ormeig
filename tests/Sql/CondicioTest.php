@@ -44,13 +44,13 @@ class CondicioTest extends TestCase
     #[DataProvider('comparatiuProvider')]
     public function testOperadorsComparatius(Comparacio $comparacio): void
     {
-        // Prova amb enter
+        // Prova amb enter i columna
         $condicio = new Condicio(new Columna(TestModelPk::class, 'testId'), $comparacio, 5);
         $this->assertInstanceOf(Condicio::class, $condicio);
         $this->assertEquals("test.testId {$comparacio->value} 5", $condicio->toSql());
 
-        // Prova amb float
-        $condicio = new Condicio(new Columna(TestModelPk::class, 'testFloat'), $comparacio, 5.5);
+        // Prova amb float i columna com a string
+        $condicio = new Condicio([TestModelPk::class, 'testFloat'], $comparacio, 5.5);
         $this->assertInstanceOf(Condicio::class, $condicio);
         $this->assertEquals("test.testFloat {$comparacio->value} 5.5", $condicio->toSql());
     }
