@@ -17,4 +17,10 @@ class TestModelMultiplePk
     #[Columna]
     #[Pk]
     private int $usuari;
+
+    public function __construct(int $entitat = 0, int $usuari = 0)
+    {
+        $this->entitat = $entitat;
+        $this->usuari = $usuari;
+    }
 }

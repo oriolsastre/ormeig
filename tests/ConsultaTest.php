@@ -14,6 +14,7 @@ use Sastreo\Ormeig\Atributs\Taula;
 use Sastreo\Ormeig\Columna;
 use Sastreo\Ormeig\Consulta;
 use Sastreo\Ormeig\Enums\Comparacio;
+use Sastreo\Ormeig\Enums\Consulta as EnumsConsulta;
 use Sastreo\Ormeig\Enums\Ordenacio as OrdenacioEnum;
 use Sastreo\Ormeig\Excepcions\TaulaNoDefinida;
 use Sastreo\Ormeig\Logic\OperadorLogic;
@@ -115,11 +116,11 @@ class ConsultaTest extends TestCase
      *
      * @return Consulta
      */
-    private function getConsulta(string $model = TestModelPk::class): Consulta
+    private function getConsulta(string $model = TestModelPk::class, EnumsConsulta $tipus = EnumsConsulta::SELECT): Consulta
     {
         $mockFabrica = new MockFabrica($model);
         $gestor = $mockFabrica->mockGestor();
 
-        return new Consulta($gestor->getModel());
+        return new Consulta($gestor->getModel(), $tipus);
     }
 }

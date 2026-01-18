@@ -67,15 +67,10 @@ class Columna
      * @param \ReflectionClass<object> $reflectModel
      *
      * @return string
-     *
-     * @throws TaulaNoDefinida
      */
     private function getTaulaSql(\ReflectionClass $reflectModel): string
     {
         $attrTaula = $reflectModel->getAttributes(Taula::class);
-        if (\count($attrTaula) !== 1) {
-            throw new TaulaNoDefinida($this->model);
-        }
 
         return $attrTaula[0]->newInstance()->nom ?? $reflectModel->getShortName();
     }

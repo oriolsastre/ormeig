@@ -34,6 +34,7 @@ use Sastreo\Ormeig\Tests\Seed\DatabaseSetUp;
 #[UsesFunction('Sastreo\Ormeig\getClausPrimaries')]
 #[UsesFunction('Sastreo\Ormeig\clausPrimariesValides')]
 #[UsesFunction('Sastreo\Ormeig\getMappedColumns')]
+#[UsesFunction('Sastreo\Ormeig\getValorColumnaModel')]
 class GestorSqliteTest extends TestCase implements GestorDatabaseTestInterface
 {
     private MockFabrica $mockFabrica;
@@ -82,6 +83,20 @@ class GestorSqliteTest extends TestCase implements GestorDatabaseTestInterface
         $reflectiveId = new \ReflectionProperty(TestUsuari::class, 'id');
         $this->assertEquals(1, $reflectiveId->getValue($usuari));
         $this->assertEquals('Raskolnikov', $reflectiveName->getValue($usuari));
+    }
+
+    #[Test]
+    public function testElimina(): void
+    {
+        $ormeig = $this->mockFabrica->realOrmeig();
+        $gestor = $ormeig->getGestor(TestUsuari::class);
+        $usuari = $gestor->trobaPerId(1);
+        $this->assertInstanceOf(TestUsuari::class, $usuari);
+
+        $this->assertNull($gestor->eliminar($usuari));
+
+        $usuariInexistent = $gestor->trobaPerId(1);
+        $this->assertNull($usuariInexistent);
     }
 
     protected function setUp(): void

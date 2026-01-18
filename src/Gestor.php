@@ -8,6 +8,7 @@ use Sastreo\Ormeig\Atributs\Columna as ColumnaAtribut;
 use Sastreo\Ormeig\Atributs\Pk;
 use Sastreo\Ormeig\Atributs\Taula;
 use Sastreo\Ormeig\Enums\Comparacio;
+use Sastreo\Ormeig\Enums\Consulta as ConsultaEnum;
 use Sastreo\Ormeig\Enums\Join as JoinEnum;
 use Sastreo\Ormeig\Enums\Ordenacio as OrdenacioEnum;
 use Sastreo\Ormeig\Excepcions\ClauPrimariaNoDefinida;
@@ -83,9 +84,9 @@ class Gestor
         return $this->pk;
     }
 
-    public function consulta(): Consulta
+    public function consulta(ConsultaEnum $tipus = ConsultaEnum::SELECT): Consulta
     {
-        return new Consulta($this->getModel());
+        return new Consulta($this->getModel(), $tipus);
     }
 
     /**
@@ -200,7 +201,25 @@ class Gestor
     }
 
     // public function desar(Model $model): Model {}
-    // public function eliminar(Model $model): void {}
+    public function eliminar(object $entitat): void
+    {
+        classEsModel($entitat::class);
+        if ($this->getModel() !== $entitat::class) {
+            // TODO : PENSAR L'ERROR
+            throw new \TypeError('El model de l\'entitat no coincideix amb el model del gestor.');
+        }
+
+        $consulta = $this->consulta(ConsultaEnum::DELETE);
+
+        $pks = getClausPrimaries($this->getModel());
+        foreach ($pks as $pk) {
+            // TODO : Comprovar que l'entitat té valors en les claus primàries?
+            $consulta->condicio($this->condicio($pk, Comparacio::EQ, getValorColumnaModel($entitat, $pk)));
+        }
+
+        $this->executaConsulta($consulta);
+    }
+
     #endregion
     /**
      * @param array<string, mixed> $data

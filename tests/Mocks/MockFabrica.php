@@ -37,7 +37,7 @@ class MockFabrica extends TestCase
     }
 
     /**
-     * @param class-string<Model> $model
+     * @param class-string $model
      *
      * @return Gestor|\PHPUnit\Framework\MockObject\MockObject
      */
