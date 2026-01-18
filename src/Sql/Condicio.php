@@ -15,11 +15,12 @@ class Condicio implements ClausulaSql
     /**
      * @param Columna    $columna
      * @param Comparacio $comparacio
+     * @param mixed      $valor
      */
     public function __construct(
         public Columna $columna,
         public Comparacio $comparacio,
-        public Columna|string|int|float|bool|\DateTime|null $valor,
+        public mixed $valor,
     ) {
         $type1 = $columna->tipus;
         $type2 = $valor instanceof Columna ? $valor->tipus : \gettype($valor);
@@ -49,7 +50,7 @@ class Condicio implements ClausulaSql
         return "{$this->columna} {$this->comparacio->value} {$this->valorToString($this->valor)}";
     }
 
-    private function valorToString(Columna|string|int|float|bool|\DateTime|null $valor): string
+    private function valorToString(mixed $valor): string
     {
         if (\is_bool($valor)) {
             return $valor ? '1' : '0';

@@ -9,7 +9,7 @@ use Sastreo\Ormeig\Enums\Comparacio;
 
 class CondicioTipusColumna extends \TypeError
 {
-    public function __construct(Columna|string|int|float|bool|\DateTime|null $valor, Comparacio $comparacio)
+    public function __construct(mixed $valor, Comparacio $comparacio)
     {
         $valorStr = $valor instanceof Columna ? 'La columna' : 'El valor';
         if (\is_scalar($valor) || $valor instanceof \Stringable) {

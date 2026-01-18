@@ -104,12 +104,13 @@ class Gestor
     /**
      * @param Columna    $columna
      * @param Comparacio $comparacio
+     * @param mixed      $valor
      *
      * @return Condicio
      *
      * @throws Excepcions\ColumnaNoExisteix
      */
-    public function condicio(Columna $columna, Comparacio $comparacio, Columna|string|int|float|bool|\DateTime|null $valor): Condicio
+    public function condicio(Columna $columna, Comparacio $comparacio, mixed $valor): Condicio
     {
         // TODO: S'hauria de controlar que la taula de la columna està inclosa al FORM o JOIN
         return new Condicio($columna, $comparacio, $valor);
