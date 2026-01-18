@@ -39,10 +39,19 @@ class Columna
         if (\count($attrColumna) !== 1) {
             throw new ColumnaNoExisteix($this->columna, $this->model);
         }
-        $reflectPropertyType = $reflectProperty->getType()->getName();
+        $reflectPropertyType = $reflectProperty->getType();
+        if ($reflectPropertyType === null) {
+            // TODO : Pensar l'error.
+            throw new \ValueError();
+        }
+        if ($reflectPropertyType instanceof \ReflectionUnionType || $reflectPropertyType instanceof \ReflectionIntersectionType) {
+            $reflectPropertyType = $reflectPropertyType->getTypes()[0];
+        }
+        /** @var \ReflectionNamedType $reflectPropertyType */
+        $reflectPropertyTypeName = $reflectPropertyType->getName();
 
         $this->columnaSql = $this->getColumnaSqlFromColumna($attrColumna[0], $this->columna);
-        $this->tipus = $attrColumna[0]->newInstance()->tipus ?? (string) $reflectPropertyType;
+        $this->tipus = $attrColumna[0]->newInstance()->tipus ?? $reflectPropertyTypeName;
     }
 
     public function __toString(): string
