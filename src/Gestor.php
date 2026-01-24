@@ -143,24 +143,34 @@ class Gestor
     /**
      * @param Consulta $consulta
      *
-     * @return ?object[]
+     * @return object[]|bool
+     *
+     * @throws \PDOException
      */
-    public function executaConsulta(Consulta $consulta): ?array
+    public function executaConsulta(Consulta $consulta): array|bool
     {
         $stmt = $this->ormeig->executaConsulta($consulta);
         if ($stmt !== false) {
-            $rawData = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-            $stmt->closeCursor();
-            $data = [];
-            /** @var array<string, mixed> $raw */
-            foreach ($rawData as $raw) {
-                array_push($data, $this->mapToModel($raw, $this->getModel()));
-            }
+            switch ($consulta->tipus) {
+                case ConsultaEnum::SELECT:
+                    $rawData = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+                    $stmt->closeCursor();
+                    $data = [];
+                    /** @var array<string, mixed> $raw */
+                    foreach ($rawData as $raw) {
+                        array_push($data, $this->mapToModel($raw, $this->getModel()));
+                    }
 
-            return $data;
+                    return $data;
+                case ConsultaEnum::DELETE:
+                    $eliminat = $stmt->rowCount();
+                    $stmt->closeCursor();
+
+                    return $eliminat > 0;
+            }
         }
 
-        return null;
+        return false;
     }
 
     #region CRUD?
@@ -173,7 +183,7 @@ class Gestor
     {
         $consulta = $this->consulta()->limit($limit);
         $resultat = $this->executaConsulta($consulta);
-        if ($resultat === null) {
+        if (\is_bool($resultat)) {
             return [];
         }
 
@@ -200,7 +210,7 @@ class Gestor
         }
 
         $resultat = $this->executaConsulta($consulta);
-        if ($resultat === null || \count($resultat) === 0) {
+        if (\is_bool($resultat) || \count($resultat) === 0) {
             return null;
         } elseif (\count($resultat) === 1) {
             return $resultat[0];
@@ -211,7 +221,7 @@ class Gestor
     }
 
     // public function desar(Model $model): Model {}
-    public function eliminar(object $entitat): void
+    public function eliminar(object $entitat): bool
     {
         classEsModel($entitat::class);
         if ($this->getModel() !== $entitat::class) {
@@ -227,7 +237,8 @@ class Gestor
             $consulta->condicio($this->condicio($pk, Comparacio::EQ, getValorColumnaModel($entitat, $pk)));
         }
 
-        $this->executaConsulta($consulta);
+        /** @var bool */
+        return $this->executaConsulta($consulta);
     }
 
     #endregion

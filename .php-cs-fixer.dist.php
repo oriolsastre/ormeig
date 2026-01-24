@@ -14,6 +14,7 @@ return (new Config())
         '@Symfony' => true,
         '@Symfony:risky' => true,
         'no_superfluous_phpdoc_tags' => false,
+        'phpdoc_to_comment' => ['allow_before_return_statement' => true],
         'array_push' => false,
         'yoda_style' => false,
         'single_line_comment_style' => false, // per les #region #endregion

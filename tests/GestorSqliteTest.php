@@ -93,10 +93,19 @@ class GestorSqliteTest extends TestCase implements GestorDatabaseTestInterface
         $usuari = $gestor->trobaPerId(1);
         $this->assertInstanceOf(TestUsuari::class, $usuari);
 
-        $this->assertNull($gestor->eliminar($usuari));
+        $this->assertTrue($gestor->eliminar($usuari));
 
         $usuariInexistent = $gestor->trobaPerId(1);
         $this->assertNull($usuariInexistent);
+    }
+
+    #[Test]
+    public function testEliminaNoExistent(): void
+    {
+        $ormeig = $this->mockFabrica->realOrmeig();
+        $gestor = $ormeig->getGestor(TestUsuari::class);
+        $usuariInexistent = new TestUsuari(3, 'No està al seed');
+        $this->assertFalse($gestor->eliminar($usuariInexistent));
     }
 
     protected function setUp(): void

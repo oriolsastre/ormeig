@@ -74,7 +74,7 @@ class GestorTest extends TestCase
         $gestor->expects($this->once())->method('condicio');
 
         $usuari = new TestUsuari(1);
-        $this->assertNull($gestor->eliminar($usuari));
+        $this->assertFalse($gestor->eliminar($usuari));
     }
 
     #[Test]
@@ -84,7 +84,7 @@ class GestorTest extends TestCase
         $gestor->expects($this->once())->method('consulta');
         $gestor->expects($this->exactly(2))->method('condicio');
 
-        $this->assertNull($gestor->eliminar(new TestModelMultiplePk(1, 2)));
+        $this->assertFalse($gestor->eliminar(new TestModelMultiplePk(1, 2)));
     }
 
     #[Test]
@@ -106,7 +106,7 @@ class GestorTest extends TestCase
             ->onlyMethods(['getModel', 'executaConsulta', 'consulta', 'condicio'])
             ->getMock();
         $gestor->method('getModel')->willReturn($model);
-        $gestor->method('executaConsulta')->willReturn(null);
+        $gestor->method('executaConsulta')->willReturn(false);
 
         return $gestor;
     }

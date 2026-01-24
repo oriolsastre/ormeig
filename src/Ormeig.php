@@ -57,12 +57,21 @@ class Ormeig
         return new Gestor($this, $model);
     }
 
+    /**
+     * @param Consulta $consulta
+     *
+     * @return \PDOStatement|false
+     *
+     * @throws \PDOException
+     */
     public function executaConsulta(Consulta $consulta): \PDOStatement|false
     {
         $sql = $consulta->getSql();
         $stmt = $this->dbcnx->prepare($sql);
         // TODO: Bind
-        $stmt->execute();
+        if ($stmt !== false) {
+            $stmt->execute();
+        }
 
         return $stmt;
     }
