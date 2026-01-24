@@ -7,12 +7,12 @@ namespace Sastreo\Ormeig\Tests;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
-use PHPUnit\Framework\Attributes\UsesFunction;
 use PHPUnit\Framework\TestCase;
 use Sastreo\Ormeig\Atributs\Columna;
 use Sastreo\Ormeig\Atributs\Taula;
 use Sastreo\Ormeig\Enums\Driver;
 use Sastreo\Ormeig\Gestor;
+use Sastreo\Ormeig\Model;
 use Sastreo\Ormeig\Ormeig;
 use Sastreo\Ormeig\Tests\Models\TestModelPk;
 
@@ -20,7 +20,7 @@ use Sastreo\Ormeig\Tests\Models\TestModelPk;
 #[UsesClass(Gestor::class)]
 #[UsesClass(Taula::class)]
 #[UsesClass(Columna::class)]
-#[UsesFunction('Sastreo\Ormeig\classEsModel')]
+#[UsesClass(Model::class)]
 class OrmeigTest extends TestCase
 {
     #[Test]

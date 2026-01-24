@@ -26,7 +26,7 @@ class Columna
         public readonly string $model,
         public readonly string $columna,
     ) {
-        classEsModel($this->model);
+        Model::classEsModel($this->model);
         $reflectModel = new \ReflectionClass($this->model);
         $this->taulaSql = $this->getTaulaSql($reflectModel);
         try {

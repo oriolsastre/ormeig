@@ -30,7 +30,7 @@ class Gestor
         private readonly Ormeig $ormeig,
         public readonly string $model,
     ) {
-        classEsModel($this->model);
+        Model::classEsModel($this->model);
 
         $this->pk = [];
         $reflectionModel = new \ReflectionClass($model);
@@ -199,8 +199,8 @@ class Gestor
      */
     public function trobaPerId(mixed $id): ?object
     {
-        $id = clausPrimariesValides($this->getModel(), $id);
-        $clausPrimaries = getClausPrimaries($this->getModel());
+        $id = Model::clausPrimariesValides($this->getModel(), $id);
+        $clausPrimaries = Model::getClausPrimaries($this->getModel());
 
         $consulta = $this->consulta()->limit(1);
 
@@ -223,7 +223,7 @@ class Gestor
     // public function desar(Model $model): Model {}
     public function eliminar(object $entitat): bool
     {
-        classEsModel($entitat::class);
+        Model::classEsModel($entitat::class);
         if ($this->getModel() !== $entitat::class) {
             // TODO : PENSAR L'ERROR
             throw new \TypeError('El model de l\'entitat no coincideix amb el model del gestor.');
@@ -231,10 +231,10 @@ class Gestor
 
         $consulta = $this->consulta(ConsultaEnum::DELETE);
 
-        $pks = getClausPrimaries($this->getModel());
+        $pks = Model::getClausPrimaries($this->getModel());
         foreach ($pks as $pk) {
             // TODO : Comprovar que l'entitat té valors en les claus primàries?
-            $consulta->condicio($this->condicio($pk, Comparacio::EQ, getValorColumnaModel($entitat, $pk)));
+            $consulta->condicio($this->condicio($pk, Comparacio::EQ, Model::getValorColumnaModel($entitat, $pk)));
         }
 
         /** @var bool */
@@ -251,7 +251,7 @@ class Gestor
     private function mapToModel(array $data, string $modelClass): object
     {
         $mappedData = [];
-        $mapping = getMappedColumns($modelClass);
+        $mapping = Model::getMappedColumns($modelClass);
         foreach ($data as $key => $value) {
             if (isset($mapping[$key])) {
                 $mappedData[$mapping[$key]] = $value;

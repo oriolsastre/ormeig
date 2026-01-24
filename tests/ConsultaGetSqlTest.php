@@ -7,12 +7,12 @@ namespace Sastreo\Ormeig\Tests;
 use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
-use PHPUnit\Framework\Attributes\UsesFunction;
 use PHPUnit\Framework\TestCase;
 use Sastreo\Ormeig\Atributs\Taula;
 use Sastreo\Ormeig\Consulta;
 use Sastreo\Ormeig\Enums\Consulta as EnumsConsulta;
 use Sastreo\Ormeig\Logic\OperadorLogic;
+use Sastreo\Ormeig\Model;
 use Sastreo\Ormeig\Tests\Mocks\StubFabrica;
 use Sastreo\Ormeig\Tests\Models\TestModelMultiplePk;
 use Sastreo\Ormeig\Tests\Models\TestModelPk;
@@ -22,7 +22,7 @@ use Sastreo\Ormeig\Tests\Models\TestUsuari;
 #[UsesClass(Taula::class)]
 #[UsesClass(Consulta::class)]
 #[UsesClass(OperadorLogic::class)]
-#[UsesFunction('Sastreo\Ormeig\classEsModel')]
+#[UsesClass(Model::class)]
 class ConsultaGetSqlTest extends TestCase
 {
     #region DELETE

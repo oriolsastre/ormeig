@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Sastreo\Ormeig\Tests;
 
-use PHPUnit\Framework\Attributes\CoversFunction;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
@@ -16,23 +16,14 @@ use Sastreo\Ormeig\Excepcions\ClauPrimariaInvalida;
 use Sastreo\Ormeig\Excepcions\ClauPrimariaNoDefinida;
 use Sastreo\Ormeig\Excepcions\ColumnaNoExisteix;
 use Sastreo\Ormeig\Excepcions\TaulaNoDefinida;
+use Sastreo\Ormeig\Model;
 use Sastreo\Ormeig\Tests\Models\TestEntitat;
 use Sastreo\Ormeig\Tests\Models\TestModelMultiplePk;
 use Sastreo\Ormeig\Tests\Models\TestModelNoPk;
 use Sastreo\Ormeig\Tests\Models\TestModelPk;
 use Sastreo\Ormeig\Tests\Models\TestUsuari;
 
-use function Sastreo\Ormeig\classEsModel;
-use function Sastreo\Ormeig\clausPrimariesValides;
-use function Sastreo\Ormeig\getClausPrimaries;
-use function Sastreo\Ormeig\getMappedColumns;
-use function Sastreo\Ormeig\getValorColumnaModel;
-
-#[CoversFunction('Sastreo\Ormeig\classEsModel')]
-#[CoversFunction('Sastreo\Ormeig\getClausPrimaries')]
-#[CoversFunction('Sastreo\Ormeig\clausPrimariesValides')]
-#[CoversFunction('Sastreo\Ormeig\getMappedColumns')]
-#[CoversFunction('Sastreo\Ormeig\getValorColumnaModel')]
+#[CoversClass(Model::class)]
 #[UsesClass(Taula::class)]
 #[UsesClass(Columna::class)]
 #[UsesClass(ColumnaAtribut::class)]
@@ -46,13 +37,13 @@ class ModelTest extends TestCase
     public function testClassEsModel(): void
     {
         $this->expectException(TaulaNoDefinida::class);
-        classEsModel(\stdClass::class);
+        Model::classEsModel(\stdClass::class);
     }
 
     #[Test]
     public function testGetClausPrimaries(): void
     {
-        $clausPrimaries = getClausPrimaries(TestUsuari::class);
+        $clausPrimaries = Model::getClausPrimaries(TestUsuari::class);
         $this->assertIsArray($clausPrimaries);
         $this->assertContainsOnlyInstancesOf(Columna::class, $clausPrimaries);
         $this->assertCount(1, $clausPrimaries);
@@ -63,14 +54,14 @@ class ModelTest extends TestCase
     public function testGetClausPrimariesThrows(): void
     {
         $this->expectException(ClauPrimariaNoDefinida::class);
-        getClausPrimaries(TestModelNoPk::class);
+        Model::getClausPrimaries(TestModelNoPk::class);
     }
 
     #[Test]
     #[DataProvider('clausPrimariesProvider')]
     public function testClausPrimariesValides(string $class, mixed $ids, array $expected): void
     {
-        $idsResult = clausPrimariesValides($class, $ids);
+        $idsResult = Model::clausPrimariesValides($class, $ids);
         $this->assertIsArray($idsResult);
         $this->assertSame($expected, $idsResult);
     }
@@ -80,7 +71,7 @@ class ModelTest extends TestCase
     {
         // Clau primària invàlida
         $this->expectException(ClauPrimariaInvalida::class);
-        clausPrimariesValides(TestUsuari::class, new \stdClass());
+        Model::clausPrimariesValides(TestUsuari::class, new \stdClass());
     }
 
     #[Test]
@@ -88,7 +79,7 @@ class ModelTest extends TestCase
     {
         // Falten claus primàries
         $this->expectException(ClauPrimariaInvalida::class);
-        clausPrimariesValides(TestModelMultiplePk::class, 1);
+        Model::clausPrimariesValides(TestModelMultiplePk::class, 1);
     }
 
     #[Test]
@@ -96,7 +87,7 @@ class ModelTest extends TestCase
     {
         // Claus primàries incorrectes
         $this->expectException(ClauPrimariaInvalida::class);
-        clausPrimariesValides(TestUsuari::class, ['noColumna' => 1]);
+        Model::clausPrimariesValides(TestUsuari::class, ['noColumna' => 1]);
     }
 
     #[Test]
@@ -104,17 +95,17 @@ class ModelTest extends TestCase
     {
         // Claus primàries incorrectes
         $this->expectException(ClauPrimariaInvalida::class);
-        clausPrimariesValides(TestUsuari::class, ['nom' => 1]);
+        Model::clausPrimariesValides(TestUsuari::class, ['nom' => 1]);
     }
 
     #[Test]
     public function testMappedColumns(): void
     {
-        $columnsUsuari = getMappedColumns(TestUsuari::class);
+        $columnsUsuari = Model::getMappedColumns(TestUsuari::class);
         $this->assertIsArray($columnsUsuari);
         $this->assertSame(TestUsuari::getMapping(), $columnsUsuari);
 
-        $columnsTest = getMappedColumns(TestModelPk::class);
+        $columnsTest = Model::getMappedColumns(TestModelPk::class);
         $this->assertIsArray($columnsTest);
         $this->assertSame(TestModelPk::getMapping(), $columnsTest);
         $this->assertArrayNotHasKey('noColumna', $columnsTest);
@@ -126,7 +117,7 @@ class ModelTest extends TestCase
         $entitat = new TestEntitat();
         $entitat->testEntitatId = 1;
         $columna = new Columna(TestEntitat::class, 'testEntitatId');
-        $this->assertSame(1, getValorColumnaModel($entitat, $columna));
+        $this->assertSame(1, Model::getValorColumnaModel($entitat, $columna));
     }
 
     #[Test]
@@ -134,7 +125,7 @@ class ModelTest extends TestCase
     {
         $usuari = new TestUsuari(2);
         $columna = new Columna(TestUsuari::class, 'id');
-        $this->assertSame(2, getValorColumnaModel($usuari, $columna));
+        $this->assertSame(2, Model::getValorColumnaModel($usuari, $columna));
     }
 
     public static function clausPrimariesProvider(): array

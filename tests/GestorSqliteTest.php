@@ -7,7 +7,6 @@ namespace Sastreo\Ormeig\Tests;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
-use PHPUnit\Framework\Attributes\UsesFunction;
 use PHPUnit\Framework\TestCase;
 use Sastreo\Ormeig\Atributs\Columna as ColumnaAtribut;
 use Sastreo\Ormeig\Atributs\Taula;
@@ -16,6 +15,7 @@ use Sastreo\Ormeig\Consulta;
 use Sastreo\Ormeig\Enums\Driver;
 use Sastreo\Ormeig\Gestor;
 use Sastreo\Ormeig\Logic\OperadorLogic;
+use Sastreo\Ormeig\Model;
 use Sastreo\Ormeig\Ormeig;
 use Sastreo\Ormeig\Sql\Condicio;
 use Sastreo\Ormeig\Tests\Mocks\MockFabrica;
@@ -30,11 +30,7 @@ use Sastreo\Ormeig\Tests\Seed\DatabaseSetUp;
 #[UsesClass(Ormeig::class)]
 #[UsesClass(OperadorLogic::class)]
 #[UsesClass(Condicio::class)]
-#[UsesFunction('Sastreo\Ormeig\classEsModel')]
-#[UsesFunction('Sastreo\Ormeig\getClausPrimaries')]
-#[UsesFunction('Sastreo\Ormeig\clausPrimariesValides')]
-#[UsesFunction('Sastreo\Ormeig\getMappedColumns')]
-#[UsesFunction('Sastreo\Ormeig\getValorColumnaModel')]
+#[UsesClass(Model::class)]
 class GestorSqliteTest extends TestCase implements GestorDatabaseTestInterface
 {
     private MockFabrica $mockFabrica;

@@ -7,12 +7,12 @@ namespace Sastreo\Ormeig\Tests;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
-use PHPUnit\Framework\Attributes\UsesFunction;
 use PHPUnit\Framework\TestCase;
 use Sastreo\Ormeig\Atributs\Columna as ColumnaAtribut;
 use Sastreo\Ormeig\Atributs\Taula;
 use Sastreo\Ormeig\Columna;
 use Sastreo\Ormeig\Gestor;
+use Sastreo\Ormeig\Model;
 use Sastreo\Ormeig\Tests\Mocks\MockFabrica;
 use Sastreo\Ormeig\Tests\Models\TestEntitat;
 use Sastreo\Ormeig\Tests\Models\TestModelMultiplePk;
@@ -23,9 +23,7 @@ use Sastreo\Ormeig\Tests\Models\TestUsuari;
 #[UsesClass(Taula::class)]
 #[UsesClass(ColumnaAtribut::class)]
 #[UsesClass(Columna::class)]
-#[UsesFunction('Sastreo\Ormeig\classEsModel')]
-#[UsesFunction('Sastreo\Ormeig\getClausPrimaries')]
-#[UsesFunction('Sastreo\Ormeig\getValorColumnaModel')]
+#[UsesClass(Model::class)]
 class GestorTest extends TestCase
 {
     private MockFabrica $mockFabrica;

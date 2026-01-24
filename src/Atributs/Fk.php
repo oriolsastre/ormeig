@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Sastreo\Ormeig\Atributs;
 
-use function Sastreo\Ormeig\classEsModel;
+use Sastreo\Ormeig\Model;
 
 #[\Attribute(\Attribute::TARGET_PROPERTY)]
 final class Fk
@@ -17,6 +17,6 @@ final class Fk
         public readonly string $model,
         public readonly ?string $columna = null,
     ) {
-        classEsModel($this->model);
+        Model::classEsModel($this->model);
     }
 }

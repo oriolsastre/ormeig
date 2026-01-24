@@ -30,7 +30,7 @@ class Consulta
         private readonly string $model,
         public EnumsConsulta $tipus = EnumsConsulta::SELECT,
     ) {
-        classEsModel($this->model);
+        Model::classEsModel($this->model);
         $this->taula = $this->getTaulaFromModel($this->model);
         $this->condicions = new LogicI();
     }

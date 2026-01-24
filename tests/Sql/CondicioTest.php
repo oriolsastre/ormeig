@@ -8,7 +8,6 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
-use PHPUnit\Framework\Attributes\UsesFunction;
 use PHPUnit\Framework\TestCase;
 use Sastreo\Ormeig\Atributs\Columna as ColumnaAtribut;
 use Sastreo\Ormeig\Atributs\Taula;
@@ -16,6 +15,7 @@ use Sastreo\Ormeig\Columna;
 use Sastreo\Ormeig\Enums\Comparacio;
 use Sastreo\Ormeig\Excepcions\ColumnaNoExisteix;
 use Sastreo\Ormeig\Excepcions\CondicioTipusColumna;
+use Sastreo\Ormeig\Model;
 use Sastreo\Ormeig\Sql\Condicio;
 use Sastreo\Ormeig\Tests\Models\TestModelPk;
 
@@ -25,7 +25,7 @@ use Sastreo\Ormeig\Tests\Models\TestModelPk;
 #[UsesClass(ColumnaAtribut::class)]
 #[UsesClass(Taula::class)]
 #[UsesClass(ColumnaNoExisteix::class)]
-#[UsesFunction('Sastreo\Ormeig\classEsModel')]
+#[UsesClass(Model::class)]
 class CondicioTest extends TestCase
 {
     #[Test]

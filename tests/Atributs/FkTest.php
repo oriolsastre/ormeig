@@ -7,15 +7,15 @@ namespace Sastreo\Ormeig\Tests\Atributs;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
-use PHPUnit\Framework\Attributes\UsesFunction;
 use PHPUnit\Framework\TestCase;
 use Sastreo\Ormeig\Atributs\Fk;
 use Sastreo\Ormeig\Excepcions\TaulaNoDefinida;
+use Sastreo\Ormeig\Model;
 use Sastreo\Ormeig\Tests\Models\TestModelPk;
 
 #[CoversClass(Fk::class)]
 #[UsesClass(TaulaNoDefinida::class)]
-#[UsesFunction('Sastreo\Ormeig\classEsModel')]
+#[UsesClass(Model::class)]
 class FkTest extends TestCase
 {
     #[Test]

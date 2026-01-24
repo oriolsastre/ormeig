@@ -6,7 +6,6 @@ namespace Sastreo\Ormeig\Tests;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\UsesClass;
-use PHPUnit\Framework\Attributes\UsesFunction;
 use PHPUnit\Framework\Test;
 use PHPUnit\Framework\TestCase;
 use Sastreo\Ormeig\Atributs\Columna as ColumnaAtribut;
@@ -18,6 +17,7 @@ use Sastreo\Ormeig\Enums\Consulta as EnumsConsulta;
 use Sastreo\Ormeig\Enums\Ordenacio as OrdenacioEnum;
 use Sastreo\Ormeig\Excepcions\TaulaNoDefinida;
 use Sastreo\Ormeig\Logic\OperadorLogic;
+use Sastreo\Ormeig\Model;
 use Sastreo\Ormeig\Sql\Condicio;
 use Sastreo\Ormeig\Sql\Ordenacio;
 use Sastreo\Ormeig\Tests\Mocks\MockFabrica;
@@ -32,7 +32,7 @@ use Sastreo\Ormeig\Tests\Models\TestModelTaulaNoDefinida;
 #[UsesClass(OperadorLogic::class)]
 #[UsesClass(Ordenacio::class)]
 #[UsesClass(TaulaNoDefinida::class)]
-#[UsesFunction('Sastreo\Ormeig\classEsModel')]
+#[UsesClass(Model::class)]
 class ConsultaTest extends TestCase
 {
     #[Test]
