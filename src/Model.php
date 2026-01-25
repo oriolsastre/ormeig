@@ -36,6 +36,8 @@ final class Model
      * @param class-string $modelClass
      *
      * @return Columna[]
+     *
+     * @throws ClauPrimariaNoDefinida
      */
     public static function getClausPrimaries(string $modelClass): array
     {
@@ -101,7 +103,29 @@ final class Model
     }
 
     /**
-     * Retorna un array amb un mapeig entre el nom de la columnes a la taula i les propieta de la classe [columna => propietat].
+     * @param class-string $modelClass
+     *
+     * @return Columna[]
+     */
+    public static function getColumnes(string $modelClass): array
+    {
+        self::classEsModel($modelClass);
+
+        $reflectionModel = new \ReflectionClass($modelClass);
+        $reflectionProperties = $reflectionModel->getProperties();
+        $columnes = [];
+        foreach ($reflectionProperties as $property) {
+            $attrsColumna = $property->getAttributes(ColumnaAtribut::class);
+            if (\count($attrsColumna) === 1) {
+                $columnes[] = new Columna($modelClass, $property->getName());
+            }
+        }
+
+        return $columnes;
+    }
+
+    /**
+     * Retorna un array amb un mapeig entre el nom de la columnes a la taula i les propietat de la classe [columna => propietat].
      *
      * @param class-string $modelClass
      *

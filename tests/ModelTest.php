@@ -99,7 +99,18 @@ class ModelTest extends TestCase
     }
 
     #[Test]
-    public function testMappedColumns(): void
+    #[DataProvider('modelColumnesProvider')]
+    public function testGetColumnes(string $modelClass, array $expected): void
+    {
+        $columnes = Model::getColumnes($modelClass);
+        $this->assertIsArray($columnes);
+        $this->assertContainsOnlyInstancesOf(Columna::class, $columnes);
+        $this->assertEquals(\count($expected), \count($columnes));
+        $this->assertEquals($expected, $columnes);
+    }
+
+    #[Test]
+    public function testGetMappedColumns(): void
     {
         $columnsUsuari = Model::getMappedColumns(TestUsuari::class);
         $this->assertIsArray($columnsUsuari);
@@ -135,5 +146,24 @@ class ModelTest extends TestCase
             'Id simple en array' => [TestUsuari::class, ['id' => 1], ['id' => 1]],
             'Id múltiple en array' => [TestModelMultiplePk::class, ['entitat' => 5, 'usuari' => 1], ['entitat' => 5, 'usuari' => 1]],
         ];
+    }
+
+    public static function modelColumnesProvider(): array
+    {
+        $strings = [
+            ['Entitat', TestEntitat::class, ['testEntitatId']],
+            ['Usuari', TestUsuari::class, ['id', 'nom', 'email', 'password']],
+            ['ModelPk', TestModelPk::class, ['testId', 'test', 'testNom', 'testFloat']],
+        ];
+        $return = [];
+        foreach ($strings as $string) {
+            $columnes = [];
+            foreach ($string[2] as $columna) {
+                $columnes[] = new Columna($string[1], $columna);
+            }
+            $return[$string[0]] = [$string[1], $columnes];
+        }
+
+        return $return;
     }
 }
