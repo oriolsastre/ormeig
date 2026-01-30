@@ -21,6 +21,7 @@ class Consulta
     /** @var array<int, Ordenacio> */
     private array $ordre = [];
     private int $limit = 100;
+    private ?object $entitat = null;
 
     /**
      * @param class-string  $model
@@ -28,7 +29,7 @@ class Consulta
      */
     public function __construct(
         private readonly string $model,
-        public EnumsConsulta $tipus = EnumsConsulta::SELECT,
+        public readonly EnumsConsulta $tipus = EnumsConsulta::SELECT,
     ) {
         Model::classEsModel($this->model);
         $this->taula = $this->getTaulaFromModel($this->model);
@@ -70,16 +71,26 @@ class Consulta
         return $this;
     }
 
+    public function entitat(object $entitat): self
+    {
+        if ($entitat::class !== $this->model) {
+            throw new \TypeError('El model de l\'entitat no coincideix amb el model de la consulta.');
+        }
+        $this->entitat = $entitat;
+
+        return $this;
+    }
+
     #region SQL
     public function getSql(): string
     {
         $sql = '';
         $from = $this->getFromSql();
         $where = $this->getWhereSql();
-        $ordre = $this->getOrdenacioSql();
-        $limit = $this->getLimitSql();
         switch ($this->tipus) {
             case EnumsConsulta::SELECT:
+                $ordre = $this->getOrdenacioSql();
+                $limit = $this->getLimitSql();
                 $sql_type = 'SELECT *';
                 $sql = "$sql_type $from";
                 if ($where !== false) {
@@ -92,6 +103,22 @@ class Consulta
                     $sql .= " $limit";
                 }
                 $sql .= ';';
+                break;
+            case EnumsConsulta::INSERT:
+                $entitat = $this->entitat;
+                if ($entitat === null) {
+                    // TODO : Pensar error
+                    throw new \Exception('No pots inserir sense entitat');
+                }
+                $columnes = Model::getColumnes($this->model);
+                $columnesStr = implode(', ', array_map(function (Columna $columna): string {
+                    return "`$columna->columnaSql`";
+                }, $columnes));
+                $valors = implode(', ', array_map(function (Columna $columna) use ($entitat): mixed {
+                    return Model::getValorColumnaModel($entitat, $columna, true);
+                }, $columnes));
+
+                $sql = "INSERT INTO `$this->taula` ($columnesStr) VALUES ($valors) RETURNING *;";
                 break;
             case EnumsConsulta::DELETE:
                 if ($where === false) {

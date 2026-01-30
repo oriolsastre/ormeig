@@ -82,6 +82,19 @@ class GestorSqliteTest extends TestCase implements GestorDatabaseTestInterface
     }
 
     #[Test]
+    public function testCrea(): void
+    {
+        $ormeig = $this->mockFabrica->realOrmeig();
+        $gestor = $ormeig->getGestor(TestUsuari::class);
+        $usuari = new TestUsuari(3, 'No està al seed');
+        $usuari = $gestor->crear($usuari);
+        $this->assertInstanceOf(TestUsuari::class, $usuari);
+
+        $nouUsuari = $gestor->trobaPerId(3);
+        $this->assertInstanceOf(TestUsuari::class, $nouUsuari);
+    }
+
+    #[Test]
     public function testElimina(): void
     {
         $ormeig = $this->mockFabrica->realOrmeig();

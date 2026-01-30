@@ -162,6 +162,13 @@ class Gestor
                     }
 
                     return $data;
+                case ConsultaEnum::INSERT:
+                    $rawData = $stmt->fetch(\PDO::FETCH_ASSOC);
+                    $stmt->closeCursor();
+                    /** @var array<string, mixed> $rawData */
+                    $creat = $this->mapToModel($rawData, $this->getModel());
+
+                    return [$creat];
                 case ConsultaEnum::DELETE:
                     $eliminat = $stmt->rowCount();
                     $stmt->closeCursor();
@@ -218,6 +225,22 @@ class Gestor
             // TODO : PENSAR L'ERROR
             throw new \TypeError();
         }
+    }
+
+    public function crear(object $entitat): object
+    {
+        Model::classEsModel($entitat::class);
+        if ($this->getModel() !== $entitat::class) {
+            // TODO : PENSAR L'ERROR
+            throw new \TypeError('El model de l\'entitat no coincideix amb el model del gestor.');
+        }
+
+        $consulta = $this->consulta(ConsultaEnum::INSERT)->entitat($entitat);
+
+        /** @var object[] $creat */
+        $creat = $this->executaConsulta($consulta);
+
+        return $creat[0];
     }
 
     // public function desar(Model $model): Model {}

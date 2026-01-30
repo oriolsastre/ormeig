@@ -151,11 +151,28 @@ final class Model
         return $mappedColumns;
     }
 
-    public static function getValorColumnaModel(object $model, Columna $columna): mixed
+    public static function getValorColumnaModel(object $model, Columna $columna, bool $string = false): mixed
     {
         $reflectionModel = new \ReflectionClass($model);
         $property = $reflectionModel->getProperty($columna->columna);
 
-        return $property->getValue($model);
+        $valor = $property->getValue($model);
+
+        return $string ? self::valorToString($valor) : $valor;
+    }
+
+    public static function valorToString(mixed $valor): string
+    {
+        if (\is_bool($valor)) {
+            return $valor ? '1' : '0';
+        } elseif (null === $valor) {
+            return 'NULL';
+        } elseif (\is_scalar($valor) || $valor instanceof \Stringable) {
+            return \gettype($valor) === 'string' ? "'$valor'" : (string) $valor;
+        } elseif ($valor instanceof \DateTime) {
+            return $valor->format('Y-m-d H:i:s');
+        } else {
+            return '';
+        }
     }
 }

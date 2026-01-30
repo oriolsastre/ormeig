@@ -10,5 +10,9 @@ interface GestorDatabaseTestInterface
 
     public function testTrobaPerId(): void;
 
+    public function testCrea(): void;
+
     public function testElimina(): void;
+
+    public function testEliminaNoExistent(): void;
 }

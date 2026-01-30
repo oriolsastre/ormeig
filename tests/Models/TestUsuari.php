@@ -25,6 +25,8 @@ class TestUsuari
     {
         $this->id = $id;
         $this->nom = $nom;
+        $this->email = '';
+        $this->password = '';
     }
 
     public static function getMapping(): array

@@ -9,6 +9,7 @@ use Sastreo\Ormeig\Enums\Comparacio;
 use Sastreo\Ormeig\Enums\Tipus;
 use Sastreo\Ormeig\Excepcions\CondicioTipusColumna;
 use Sastreo\Ormeig\Interfaces\ClausulaSql;
+use Sastreo\Ormeig\Model;
 
 class Condicio implements ClausulaSql
 {
@@ -54,19 +55,11 @@ class Condicio implements ClausulaSql
 
     public function toSql(): string
     {
-        return "{$this->columna} {$this->comparacio->value} {$this->valorToString($this->valor)}";
-    }
-
-    private function valorToString(mixed $valor): string
-    {
-        if (\is_bool($valor)) {
-            return $valor ? '1' : '0';
-        } elseif (\is_scalar($valor) || $valor instanceof \Stringable) {
-            return \gettype($valor) === 'string' ? "'$valor'" : (string) $valor;
-        } elseif ($valor instanceof \DateTime) {
-            return $valor->format('Y-m-d H:i:s');
-        } else {
-            return '';
+        $sql = "{$this->columna} {$this->comparacio->value}";
+        if ($this->comparacio !== Comparacio::NULL) {
+            $sql .= ' '.Model::valorToString($this->valor);
         }
+
+        return $sql;
     }
 }

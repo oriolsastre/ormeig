@@ -23,6 +23,7 @@ use Sastreo\Ormeig\Sql\Ordenacio;
 use Sastreo\Ormeig\Tests\Mocks\MockFabrica;
 use Sastreo\Ormeig\Tests\Models\TestModelPk;
 use Sastreo\Ormeig\Tests\Models\TestModelTaulaNoDefinida;
+use Sastreo\Ormeig\Tests\Models\TestUsuari;
 
 #[CoversClass(Consulta::class)]
 #[UsesClass(Columna::class)]
@@ -52,7 +53,7 @@ class ConsultaTest extends TestCase
     #[Test]
     public function testGetSqlSimple(): void
     {
-        $consulta = $this->getConsulta('Test');
+        $consulta = $this->getConsulta();
         $sql = $consulta->getSql();
         $this->assertIsString($sql);
         $this->assertStringStartsWith('SELECT * FROM test', $sql);
@@ -111,6 +112,16 @@ class ConsultaTest extends TestCase
     }
 
     #endregion SQL
+    #[Test]
+    public function testInsertInto(): void
+    {
+        $usuari = new TestUsuari();
+        $consulta = $this->getConsulta(TestUsuari::class, EnumsConsulta::INSERT);
+        $consulta->entitat($usuari);
+
+        $this->assertEquals("INSERT INTO `usuari` (`userId`, `nom`, `email`, `password`) VALUES (0, '', '', '') RETURNING *;", $consulta->getSql());
+    }
+
     /**
      * @param class-string $model
      *
@@ -119,7 +130,7 @@ class ConsultaTest extends TestCase
     private function getConsulta(string $model = TestModelPk::class, EnumsConsulta $tipus = EnumsConsulta::SELECT): Consulta
     {
         $mockFabrica = new MockFabrica($model);
-        $gestor = $mockFabrica->mockGestor();
+        $gestor = $mockFabrica->mockGestor($model);
 
         return new Consulta($gestor->getModel(), $tipus);
     }
